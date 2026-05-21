@@ -12,7 +12,7 @@ from
 
 const firebaseConfig = {
 
-apiKey:"PASTE_APIKEY",
+apiKey:"AIzaSyB7D9fM_Twg04mNnPIOhLZLq56as255wzc",
 
 authDomain:"asat-2026.firebaseapp.com",
 
@@ -22,7 +22,7 @@ storageBucket:"asat-2026.appspot.com",
 
 messagingSenderId:"99708731765",
 
-appId:"PASTE_APPID"
+appId:"1:99708731765:web:3fc4914a6264ffe2ee533c"
 
 };
 
