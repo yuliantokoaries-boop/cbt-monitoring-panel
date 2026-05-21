@@ -207,3 +207,48 @@ kelasFilter.addEventListener(
 "change",
 renderData
 )
+document
+
+.getElementById(
+"exportBtn"
+)
+
+.addEventListener(
+
+"click",
+
+()=>{
+
+let csv=
+
+"Username,Nama,Kelas,Status,Mapel\n"
+
+allData.forEach(item=>{
+
+csv +=
+
+`${item.username},${item.nama||''},${item.kelas||''},${item.status||''},${item.mapel||''}\n`
+
+})
+
+const blob=
+
+new Blob([csv])
+
+const url=
+
+URL.createObjectURL(blob)
+
+const a=
+document.createElement("a")
+
+a.href=url
+
+a.download=
+
+"cbt-monitoring.csv"
+
+a.click()
+
+}
+)
