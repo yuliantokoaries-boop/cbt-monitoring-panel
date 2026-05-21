@@ -1,6 +1,76 @@
 <!DOCTYPE html>
 <html>
+
+<head>
+
+<title>CBT Monitoring</title>
+
+<style>
+
+body{
+font-family:Arial;
+padding:20px;
+background:#f4f6f9;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+background:white;
+}
+
+th,td{
+padding:12px;
+border:1px solid #ddd;
+text-align:left;
+}
+
+th{
+background:#1565C0;
+color:white;
+}
+
+.online{
+color:green;
+font-weight:bold;
+}
+
+.ujian{
+color:red;
+font-weight:bold;
+}
+
+</style>
+
+</head>
+
 <body>
-<h1>CBT MONITORING</h1>
+
+<h1>🚀 CBT Monitoring Realtime</h1>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Username</th>
+<th>Nama</th>
+<th>Kelas</th>
+<th>Status</th>
+<th>Mapel</th>
+
+</tr>
+
+</thead>
+
+<tbody id="tableBody">
+
+</tbody>
+
+</table>
+
+<script type="module" src="firebase.js"></script>
+
 </body>
 </html>
