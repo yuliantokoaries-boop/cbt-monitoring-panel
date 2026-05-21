@@ -1,41 +1,34 @@
 import { initializeApp }
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"
 
 import {
 getFirestore,
 collection,
 onSnapshot
 }
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
 
 const firebaseConfig = {
 
-apiKey:"AIzaSyB7D9fM_Twg04mNnPIOhLZLq56as255wzc",
+apiKey:"APIKEY_ANDA",
+authDomain:"PROJECT.firebaseapp.com",
+projectId:"PROJECT_ID_ANDA",
+storageBucket:"PROJECT.appspot.com",
+messagingSenderId:"SENDER_ID_ANDA",
+appId:"APP_ID_ANDA"
 
-authDomain:"asat-2026.firebaseapp.com",
-
-projectId:"asat-2026",
-
-storageBucket:"asat-2026.appspot.com",
-
-messagingSenderId:"99708731765",
-
-appId:"1:99708731765:web:3fc4914a6264ffe2ee533c"
-
-};
+}
 
 const app =
-initializeApp(firebaseConfig);
+initializeApp(firebaseConfig)
 
 const db =
-getFirestore(app);
+getFirestore(app)
 
-const tableBody =
+const table =
 document.getElementById(
 "tableBody"
-);
+)
 
 onSnapshot(
 
@@ -46,47 +39,40 @@ db,
 
 (snapshot)=>{
 
-tableBody.innerHTML="";
+table.innerHTML=""
 
-snapshot.forEach(
-
-(doc)=>{
+snapshot.forEach((doc)=>{
 
 const data =
-doc.data();
+doc.data()
 
-tableBody.innerHTML +=`
+table.innerHTML += `
 
 <tr>
 
 <td>${doc.id}</td>
 
-<td>${data.nama || ""}</td>
+<td>${data.nama||'-'}</td>
 
-<td>${data.sekolah || ""}</td>
+<td>${data.kelas||'-'}</td>
 
-<td>${data.kelas || ""}</td>
+<td class="ujian">
 
-<td class="online">
-${data.status || ""}
+${data.status||'-'}
+
 </td>
 
 <td>
-${data.mapel || "-"}
-</td>
 
-<td>
-${data.waktu?.toDate()
-.toLocaleString() || ""}
+${data.mapel||'-'}
+
 </td>
 
 </tr>
 
-`;
+`
 
-}
-
-)
+})
 
 }
 
