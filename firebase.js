@@ -10,12 +10,12 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
 
 const firebaseConfig = {
 
-apiKey:"APIKEY_ANDA",
+apiKey:"AIzaSyB7D9fM_Twg04mNnPIOhLZLq56as255wzc",
 authDomain:"PROJECT.firebaseapp.com",
-projectId:"PROJECT_ID_ANDA",
+projectId:"asat-2026",
 storageBucket:"PROJECT.appspot.com",
-messagingSenderId:"SENDER_ID_ANDA",
-appId:"APP_ID_ANDA"
+messagingSenderId:"99708731765",
+appId:"1:99708731765:web:3fc4914a6264ffe2ee533c"
 
 }
 
