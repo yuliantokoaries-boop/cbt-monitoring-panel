@@ -11,9 +11,9 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
 const firebaseConfig = {
 
 apiKey:"AIzaSyB7D9fM_Twg04mNnPIOhLZLq56as255wzc",
-authDomain:"PROJECT.firebaseapp.com",
+authDomain:"asat-2026.firebaseapp.com",
 projectId:"asat-2026",
-storageBucket:"PROJECT.appspot.com",
+storageBucket:"asat-2026.firebasestorage.app",
 messagingSenderId:"99708731765",
 appId:"1:99708731765:web:3fc4914a6264ffe2ee533c"
 
@@ -30,6 +30,8 @@ document.getElementById(
 "tableBody"
 )
 
+console.log("Firebase CONNECTED")
+
 onSnapshot(
 
 collection(
@@ -39,12 +41,23 @@ db,
 
 (snapshot)=>{
 
+console.log(
+"JUMLAH DATA = ",
+snapshot.size
+)
+
 table.innerHTML=""
 
 snapshot.forEach((doc)=>{
 
 const data =
 doc.data()
+
+console.log(
+"DOC:",
+doc.id,
+data
+)
 
 table.innerHTML += `
 
@@ -56,17 +69,9 @@ table.innerHTML += `
 
 <td>${data.kelas||'-'}</td>
 
-<td class="ujian">
+<td>${data.status||'-'}</td>
 
-${data.status||'-'}
-
-</td>
-
-<td>
-
-${data.mapel||'-'}
-
-</td>
+<td>${data.mapel||'-'}</td>
 
 </tr>
 
