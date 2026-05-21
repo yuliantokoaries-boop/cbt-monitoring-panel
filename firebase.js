@@ -135,6 +135,26 @@ ${item.status||'-'}
 
 <td>${item.mapel||'-'}</td>
 
+<td>
+
+${
+
+item.waktu
+
+?
+
+new Date(
+item.waktu.seconds*1000
+).toLocaleTimeString()
+
+:
+
+'-'
+
+}
+
+</td>
+
 </tr>
 
 `
