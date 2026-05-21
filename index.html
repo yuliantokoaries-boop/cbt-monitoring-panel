@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
 
 <title>CBT Monitoring</title>
@@ -13,6 +12,18 @@ padding:20px;
 background:#f4f6f9;
 }
 
+.card{
+background:white;
+padding:15px;
+border-radius:10px;
+margin-bottom:20px;
+}
+
+input,select{
+padding:10px;
+margin:10px;
+}
+
 table{
 width:100%;
 border-collapse:collapse;
@@ -22,7 +33,6 @@ background:white;
 th,td{
 padding:12px;
 border:1px solid #ddd;
-text-align:left;
 }
 
 th{
@@ -47,6 +57,30 @@ font-weight:bold;
 <body>
 
 <h1>🚀 CBT Monitoring Realtime</h1>
+
+<div class="card">
+
+<h2 id="totalOnline">
+ONLINE : 0
+</h2>
+
+<input
+id="search"
+placeholder="Cari Username/Nama">
+
+<select id="kelasFilter">
+
+<option value="">
+Semua Kelas
+</option>
+
+<option>4</option>
+<option>5</option>
+<option>6</option>
+
+</select>
+
+</div>
 
 <table>
 
