@@ -203,47 +203,27 @@ if(
 
 controlDiv.innerHTML +=`
 
-<div style="margin:12px">
+<div class="controlCard">
 
-<h3>${mapel}</h3>
+<h3>
+${mapel}
+</h3>
 
 <button
 
 id="${id}"
 
-onclick="toggleExam(
-
-'${mapel}',
-
-'${status}'
-
-)"
-
-style="
-
-padding:10px 20px;
-
-border:none;
-
-border-radius:8px;
-
-cursor:pointer;
-
-background:
-
+class="statusBtn
 ${status==="OPEN"
 ?
 'green'
 :
-'red'}
+'red'}"
 
-;
-
-color:white;
-
-font-weight:bold;
-
-"
+onclick="toggleExam(
+'${mapel}',
+'${status}'
+)"
 
 >
 
@@ -253,6 +233,7 @@ ${status}
 
 </div>
 
+`
 `
 
 }
