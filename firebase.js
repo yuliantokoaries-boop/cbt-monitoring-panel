@@ -1,257 +1,63 @@
+// FIREBASE IMPORT
+
 import { initializeApp }
+
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"
 
 import {
+
 getFirestore,
 collection,
-onSnapshot
+onSnapshot,
+doc,
+setDoc
+
 }
+
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
 
-const firebaseConfig={
 
-apiKey:"AIzaSyB7D9fM_Twg04mNnPIOhLZLq56as255wzc",
 
-authDomain:"asat-2026.firebaseapp.com",
+//////////////////////////////////////////////////////
+// FIREBASE CONFIG
+//////////////////////////////////////////////////////
 
-projectId:"asat-2026",
+const firebaseConfig = {
 
-storageBucket:"asat-2026.firebasestorage.app",
+apiKey: "APIKEY_ANDA",
 
-messagingSenderId:"99708731765",
+authDomain: "PROJECTID.firebaseapp.com",
 
-appId:"1:99708731765:web:3fc4914a6264ffe2ee533c"
+projectId: "PROJECTID",
+
+storageBucket: "PROJECTID.appspot.com",
+
+messagingSenderId: "XXXXXXXX",
+
+appId: "APPID_ANDA"
 
 }
 
-const app=
-initializeApp(firebaseConfig)
 
-const db=
+
+//////////////////////////////////////////////////////
+// INIT FIREBASE
+//////////////////////////////////////////////////////
+
+const app =
+initializeApp(
+firebaseConfig
+)
+
+const db =
 getFirestore(app)
 
-const table=
-document.getElementById(
-"tableBody"
-)
 
-const totalOnline=
-document.getElementById(
-"totalOnline"
-)
 
-const searchBox=
-document.getElementById(
-"search"
-)
+//////////////////////////////////////////////////////
+// MAPEL LIST
+//////////////////////////////////////////////////////
 
-const kelasFilter=
-document.getElementById(
-"kelasFilter"
-)
-
-let allData=[]
-
-function renderData(){
-
-table.innerHTML=""
-
-const keyword=
-searchBox.value
-.toLowerCase()
-
-const kelas=
-kelasFilter.value
-
-let onlineCount=0
-
-allData
-
-.filter(item=>{
-
-const cocokSearch=
-
-item.username
-.toLowerCase()
-.includes(keyword)
-
-||
-
-(item.nama||"")
-.toLowerCase()
-.includes(keyword)
-
-const cocokKelas=
-
-kelas==""
-
-||
-
-item.kelas==kelas
-
-return cocokSearch
-&&
-cocokKelas
-
-})
-
-.forEach(item=>{
-
-if(
-item.status=="ONLINE"
-||
-item.status=="UJIAN"
-){
-
-onlineCount++
-
-}
-
-table.innerHTML += `
-
-<tr>
-
-<td>${item.username}</td>
-
-<td>${item.nama||'-'}</td>
-
-<td>${item.kelas||'-'}</td>
-
-<td>
-
-<span class="${
-item.status=="UJIAN"
-?
-'ujian'
-:
-'online'
-}">
-
-${item.status||'-'}
-
-</span>
-
-</td>
-
-<td>${item.mapel||'-'}</td>
-
-<td>
-
-${
-
-item.waktu
-
-?
-
-new Date(
-item.waktu.seconds*1000
-).toLocaleTimeString()
-
-:
-
-'-'
-
-}
-
-</td>
-
-</tr>
-
-`
-
-})
-
-totalOnline.innerText=
-
-"ONLINE : "
-+
-onlineCount
-
-}
-
-onSnapshot(
-
-collection(
-db,
-"login_status"
-),
-
-(snapshot)=>{
-
-allData=[]
-
-snapshot.forEach((doc)=>{
-
-allData.push({
-
-username:doc.id,
-
-...doc.data()
-
-})
-
-})
-
-renderData()
-
-}
-
-)
-
-searchBox.addEventListener(
-"input",
-renderData
-)
-
-kelasFilter.addEventListener(
-"change",
-renderData
-)
-document
-
-.getElementById(
-"exportBtn"
-)
-
-.addEventListener(
-
-"click",
-
-()=>{
-
-let csv=
-
-"Username,Nama,Kelas,Status,Mapel\n"
-
-allData.forEach(item=>{
-
-csv +=
-
-`${item.username},${item.nama||''},${item.kelas||''},${item.status||''},${item.mapel||''}\n`
-
-})
-
-const blob=
-
-new Blob([csv])
-
-const url=
-
-URL.createObjectURL(blob)
-
-const a=
-document.createElement("a")
-
-a.href=url
-
-a.download=
-
-"cbt-monitoring.csv"
-
-a.click()
-
-}
-)
 const mapelList=[
 
 "Bahasa Indonesia",
@@ -265,110 +71,179 @@ const mapelList=[
 
 ]
 
-const controlPanel=
 
+
+//////////////////////////////////////////////////////
+// REALTIME LOGIN STATUS
+//////////////////////////////////////////////////////
+
+const tbody =
+document.getElementById(
+"tableBody"
+)
+
+const onlineCount =
+document.getElementById(
+"onlineCount"
+)
+
+onSnapshot(
+
+collection(
+db,
+"login_status"
+),
+
+(snapshot)=>{
+
+tbody.innerHTML=""
+
+let online=0
+
+snapshot.forEach((docu)=>{
+
+const data=
+docu.data()
+
+if(
+data.status==="ONLINE"||
+data.status==="UJIAN"
+){
+online++
+}
+
+tbody.innerHTML +=`
+
+<tr>
+
+<td>${docu.id}</td>
+
+<td>${data.nama||"-"}</td>
+
+<td>${data.kelas||"-"}</td>
+
+<td style="color:red;font-weight:bold">
+
+${data.status||"-"}
+
+</td>
+
+<td>${data.mapel||"-"}</td>
+
+<td>
+
+${data.waktu
+?
+new Date(
+data.waktu.seconds*1000
+).toLocaleTimeString()
+:
+"-"}
+
+</td>
+
+</tr>
+
+`
+
+})
+
+onlineCount.innerText=
+online
+
+}
+
+)
+
+
+
+//////////////////////////////////////////////////////
+// CONTROL PANEL
+//////////////////////////////////////////////////////
+
+const controlDiv=
 document.getElementById(
 "controlPanel"
 )
 
+
+
 function loadControlPanel(){
 
-controlPanel.innerHTML=""
+controlDiv.innerHTML=""
 
 mapelList.forEach(
 
 (mapel)=>{
 
-db.collection(
-"exam_control"
-)
+onSnapshot(
 
-.doc(mapel)
+doc(
+db,
+"exam_control",
+mapel
+),
 
-.onSnapshot(
-
-(doc)=>{
+(snapshot)=>{
 
 const data=
-doc.data()||{}
+snapshot.data()||{}
 
 const status=
-
-data.status
-||
+data.status||
 "CLOSED"
 
-renderCard(
+const id=
+"btn_"+mapel
+.replaceAll(" ","_")
 
-mapel,
-status
-
-)
-
-}
-
-)
-
-}
-
-)
-
-}
-
-function renderCard(
-
-mapel,
-status
-
+if(
+!document.getElementById(id)
 ){
 
-let color=
+controlDiv.innerHTML +=`
 
-status=="OPEN"
+<div style="margin:12px">
 
-?
-"#2E7D32"
-
-:
-"#C62828"
-
-controlPanel.innerHTML +=`
-
-<div style="
-
-background:white;
-padding:16px;
-margin:10px 0;
-border-radius:12px;
-box-shadow:0 2px 6px rgba(0,0,0,0.1);
-
-">
-
-<h3>
-
-${mapel}
-
-</h3>
+<h3>${mapel}</h3>
 
 <button
 
-style="
-
-background:${color};
-color:white;
-padding:10px 20px;
-border:none;
-border-radius:10px;
-cursor:pointer;
-
-"
+id="${id}"
 
 onclick="toggleExam(
 
 '${mapel}',
+
 '${status}'
 
 )"
+
+style="
+
+padding:10px 20px;
+
+border:none;
+
+border-radius:8px;
+
+cursor:pointer;
+
+background:
+
+${status==="OPEN"
+?
+'green'
+:
+'red'}
+
+;
+
+color:white;
+
+font-weight:bold;
+
+"
 
 >
 
@@ -382,9 +257,50 @@ ${status}
 
 }
 
-window.toggleExam=
+else{
 
-function(
+const btn=
+document.getElementById(id)
+
+btn.innerText=
+status
+
+btn.style.background=
+
+status==="OPEN"
+?
+"green"
+:
+"red"
+
+btn.onclick=()=>{
+
+toggleExam(
+mapel,
+status
+)
+
+}
+
+}
+
+}
+
+)
+
+}
+
+)
+
+}
+
+
+
+//////////////////////////////////////////////////////
+// TOGGLE EXAM
+//////////////////////////////////////////////////////
+
+window.toggleExam = async function(
 
 mapel,
 status
@@ -393,7 +309,7 @@ status
 
 const newStatus=
 
-status=="OPEN"
+status==="OPEN"
 
 ?
 
@@ -403,37 +319,25 @@ status=="OPEN"
 
 "OPEN"
 
-db.collection(
-"exam_control"
-)
+try{
 
-.doc(mapel)
+await setDoc(
 
-.update({
+doc(
+db,
+"exam_control",
+mapel
+),
+
+{
 
 status:newStatus
 
-})
+},
 
-}
+{
 
-window.openAll=()=>{
-
-mapelList.forEach(
-
-(mapel)=>{
-
-db.collection(
-"exam_control"
-)
-
-.doc(mapel)
-
-.update({
-
-status:"OPEN"}
-
-)
+merge:true
 
 }
 
@@ -441,28 +345,110 @@ status:"OPEN"}
 
 }
 
-window.closeAll=()=>{
+catch(err){
 
-mapelList.forEach(
+console.error(err)
 
-(mapel)=>{
+alert(err.message)
 
-db.collection(
-"exam_control"
-)
+}
 
-.doc(mapel)
+}
 
-.update({
 
-status:"CLOSED"}
 
-)
+//////////////////////////////////////////////////////
+// BUKA SEMUA
+//////////////////////////////////////////////////////
+
+window.openAllExam =
+async function(){
+
+for(
+const mapel
+of
+mapelList
+){
+
+await setDoc(
+
+doc(
+db,
+"exam_control",
+mapel
+),
+
+{
+
+status:"OPEN"
+
+},
+
+{
+
+merge:true
 
 }
 
 )
 
 }
+
+alert(
+"SEMUA UJIAN DIBUKA"
+)
+
+}
+
+
+
+//////////////////////////////////////////////////////
+// TUTUP SEMUA
+//////////////////////////////////////////////////////
+
+window.closeAllExam =
+async function(){
+
+for(
+const mapel
+of
+mapelList
+){
+
+await setDoc(
+
+doc(
+db,
+"exam_control",
+mapel
+),
+
+{
+
+status:"CLOSED"
+
+},
+
+{
+
+merge:true
+
+}
+
+)
+
+}
+
+alert(
+"SEMUA UJIAN DITUTUP"
+)
+
+}
+
+
+
+//////////////////////////////////////////////////////
+// LOAD PANEL
+//////////////////////////////////////////////////////
 
 loadControlPanel()
