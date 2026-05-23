@@ -251,36 +251,50 @@ font-weight:bold;
 
 <body>
 
-<h1>🚀 CBT Monitoring Realtime</h1>
+<div class="container">
+
+<h1>
+🚀 CBT Monitoring Realtime
+</h1>
+
+<div class="stats">
+
+<div class="statBox">
+
+ONLINE :
+<span id="onlineCount">
+0
+</span>
+
+</div>
+
+</div>
 
 <div class="card">
 
-<h2 id="totalOnline">
-ONLINE : 0
-</h2>
-
 <input
-id="search"
+id="searchInput"
 placeholder="Cari Username/Nama">
 
 <select id="kelasFilter">
 
-<option value="">
+<option>
 Semua Kelas
 </option>
 
-<option>4</option>
-<option>5</option>
-<option>6</option>
-
 </select>
-  <button id="exportBtn">
+
+<button
+class="blue"
+onclick="exportCSV()">
 
 Export CSV
 
 </button>
 
 </div>
+
+<div class="card">
 
 <table>
 
@@ -305,30 +319,46 @@ Export CSV
 
 </table>
 
-<script type="module" src="firebase.js"></script>
+</div>
 
-</body>
-  <h2>
+<div class="card">
 
+<h2>
 🚀 PANEL CONTROL UJIAN
-
 </h2>
 
-<button onclick="openAll()">
+<div style="margin-bottom:20px;">
+
+<button
+class="green"
+onclick="openAllExam()">
 
 BUKA SEMUA
 
 </button>
 
-<button onclick="closeAll()">
+<button
+class="red"
+onclick="closeAllExam()">
 
 TUTUP SEMUA
 
 </button>
 
-<div id="controlPanel">
+</div>
+
+<div
+class="controlGrid"
+id="controlPanel">
 
 </div>
 
-<hr>
-</html>
+</div>
+
+</div>
+
+<script type="module"
+src="firebase.js">
+</script>
+
+</body>
