@@ -8,7 +8,8 @@ getFirestore,
 collection,
 onSnapshot,
 doc,
-setDoc
+setDoc,
+getDoc
 }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
 
@@ -61,21 +62,14 @@ const mapelList=[
 ////////////////////////////////////////////////////////
 
 const tbody=
-document.getElementById(
-"tableBody"
-)
+document.getElementById("tableBody")
 
 const onlineCount=
-document.getElementById(
-"onlineCount"
-)
+document.getElementById("onlineCount")
 
 onSnapshot(
 
-collection(
-db,
-"login_status"
-),
+collection(db,"login_status"),
 
 (snapshot)=>{
 
@@ -97,33 +91,15 @@ online++
 
 let waktu="-"
 
-if(data.waktu){
-
-try{
-
-if(data.waktu.seconds){
+if(data.waktu?.seconds){
 
 waktu=
 
 new Date(
 data.waktu.seconds*1000
 ).toLocaleTimeString(
-'id-ID',
-{
-hour:'2-digit',
-minute:'2-digit',
-second:'2-digit'
-}
+'id-ID'
 )
-
-}
-
-}
-catch(e){
-
-console.log(e)
-
-}
 
 }
 
@@ -166,7 +142,7 @@ online
 // CONTROL PANEL
 ////////////////////////////////////////////////////////
 
-const controlPanel =
+const controlPanel=
 document.getElementById(
 "controlPanel"
 )
@@ -175,7 +151,9 @@ function loadControlPanel(){
 
 controlPanel.innerHTML=""
 
-mapelList.forEach((mapel)=>{
+mapelList.forEach(
+
+(mapel)=>{
 
 onSnapshot(
 
@@ -187,17 +165,23 @@ mapel
 
 (snapshot)=>{
 
-const data =
-snapshot.data() || {}
+const data=
+snapshot.data()||{}
 
-const status =
-data.status || "CLOSED"
+const status=
+data.status||
+"CLOSED"
 
-const id =
-"btn_" +
-mapel.replaceAll(" ","_")
+const id=
+"btn_"+
+mapel.replaceAll(
+" ",
+"_"
+)
 
-if(!document.getElementById(id)){
+if(
+!document.getElementById(id)
+){
 
 controlPanel.innerHTML += `
 
@@ -224,7 +208,8 @@ document.getElementById(id)
 
 if(btn){
 
-btn.innerText=status
+btn.innerText=
+status
 
 btn.style.background=
 
@@ -258,23 +243,24 @@ toggleExam(mapel)
 // TOGGLE
 ////////////////////////////////////////////////////////
 
-window.toggleExam =
+window.toggleExam=
 async function(mapel){
 
 try{
 
-const ref =
+const ref=
 doc(
 db,
 "exam_control",
 mapel
 )
 
-onSnapshot(ref, async(snapshot)=>{
+const snap=
+await getDoc(ref)
 
 const current=
 
-snapshot.data()?.status
+snap.data()?.status
 ||
 "CLOSED"
 
@@ -304,15 +290,13 @@ merge:true
 
 )
 
-})
-
 }
 catch(err){
 
-console.error(err)
+console.log(err)
 
 alert(
-"Gagal update status"
+"GAGAL UPDATE STATUS"
 )
 
 }
@@ -325,12 +309,14 @@ alert(
 // OPEN ALL
 ////////////////////////////////////////////////////////
 
-window.openAllExam =
+window.openAllExam=
 async function(){
 
-try{
-
-for(const mapel of mapelList){
+for(
+const mapel
+of
+mapelList
+){
 
 await setDoc(
 
@@ -357,13 +343,6 @@ alert(
 )
 
 }
-catch(err){
-
-console.log(err)
-
-}
-
-}
 
 
 
@@ -371,12 +350,14 @@ console.log(err)
 // CLOSE ALL
 ////////////////////////////////////////////////////////
 
-window.closeAllExam =
+window.closeAllExam=
 async function(){
 
-try{
-
-for(const mapel of mapelList){
+for(
+const mapel
+of
+mapelList
+){
 
 await setDoc(
 
@@ -403,13 +384,7 @@ alert(
 )
 
 }
-catch(err){
 
-console.log(err)
-
-}
-
-}
 
 
 ////////////////////////////////////////////////////////
