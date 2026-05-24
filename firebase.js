@@ -166,7 +166,7 @@ online
 // CONTROL PANEL
 ////////////////////////////////////////////////////////
 
-const controlPanel=
+const controlPanel =
 document.getElementById(
 "controlPanel"
 )
@@ -175,9 +175,7 @@ function loadControlPanel(){
 
 controlPanel.innerHTML=""
 
-mapelList.forEach(
-
-(mapel)=>{
+mapelList.forEach((mapel)=>{
 
 onSnapshot(
 
@@ -189,35 +187,23 @@ mapel
 
 (snapshot)=>{
 
-const data=
-snapshot.data()||{}
+const data =
+snapshot.data() || {}
 
-const status=
-data.status||
-"CLOSED"
+const status =
+data.status || "CLOSED"
 
-const id=
-"btn_"+
-mapel.replaceAll(
-" ",
-"_"
-)
+const id =
+"btn_" +
+mapel.replaceAll(" ","_")
 
-if(
-
-!document.getElementById(id)
-
-){
+if(!document.getElementById(id)){
 
 controlPanel.innerHTML += `
 
 <div class="controlCard">
 
-<h3>
-
-${mapel}
-
-</h3>
+<h3>${mapel}</h3>
 
 <button
 id="${id}"
@@ -238,8 +224,7 @@ document.getElementById(id)
 
 if(btn){
 
-btn.innerText=
-status
+btn.innerText=status
 
 btn.style.background=
 
@@ -255,22 +240,15 @@ status==="OPEN"
 
 btn.onclick=()=>{
 
-toggleExam(
-mapel,
-status
-)
+toggleExam(mapel)
 
 }
 
 }
 
-}
+})
 
-)
-
-}
-
-)
+})
 
 }
 
@@ -280,15 +258,29 @@ status
 // TOGGLE
 ////////////////////////////////////////////////////////
 
-window.toggleExam=
-async function(
-mapel,
-status
-){
+window.toggleExam =
+async function(mapel){
+
+try{
+
+const ref =
+doc(
+db,
+"exam_control",
+mapel
+)
+
+onSnapshot(ref, async(snapshot)=>{
+
+const current=
+
+snapshot.data()?.status
+||
+"CLOSED"
 
 const newStatus=
 
-status==="OPEN"
+current==="OPEN"
 
 ?
 
@@ -300,11 +292,7 @@ status==="OPEN"
 
 await setDoc(
 
-doc(
-db,
-"exam_control",
-mapel
-),
+ref,
 
 {
 status:newStatus
@@ -316,6 +304,19 @@ merge:true
 
 )
 
+})
+
+}
+catch(err){
+
+console.error(err)
+
+alert(
+"Gagal update status"
+)
+
+}
+
 }
 
 
@@ -324,14 +325,12 @@ merge:true
 // OPEN ALL
 ////////////////////////////////////////////////////////
 
-window.openAllExam=
+window.openAllExam =
 async function(){
 
-for(
-const mapel
-of
-mapelList
-){
+try{
+
+for(const mapel of mapelList){
 
 await setDoc(
 
@@ -358,6 +357,13 @@ alert(
 )
 
 }
+catch(err){
+
+console.log(err)
+
+}
+
+}
 
 
 
@@ -365,14 +371,12 @@ alert(
 // CLOSE ALL
 ////////////////////////////////////////////////////////
 
-window.closeAllExam=
+window.closeAllExam =
 async function(){
 
-for(
-const mapel
-of
-mapelList
-){
+try{
+
+for(const mapel of mapelList){
 
 await setDoc(
 
@@ -399,7 +403,13 @@ alert(
 )
 
 }
+catch(err){
 
+console.log(err)
+
+}
+
+}
 
 
 ////////////////////////////////////////////////////////
