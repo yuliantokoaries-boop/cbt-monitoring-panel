@@ -1,8 +1,7 @@
 // FIREBASE IMPORT
 
-import { initializeApp }
-
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"
+import { initializeApp } from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"
 
 import {
 
@@ -14,35 +13,35 @@ setDoc
 
 }
 
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
 
 
 
-//////////////////////////////////////////////////////
-// FIREBASE CONFIG
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////
+// CONFIG
+////////////////////////////////////////////////////////
 
 const firebaseConfig={
 
-apiKey:"AIzaSyB7D9fM_Twg04mNnPIOhLZLq56as255wzc",
+apiKey:"AIzaSyB7D9fM_Twg04WNnPIOhLZLq56as255wzc",
 
 authDomain:"asat-2026.firebaseapp.com",
 
 projectId:"asat-2026",
 
-storageBucket:"asat-2026.firebasestorage.app",
+storageBucket:
+"asat-2026.firebasestorage.app",
 
-messagingSenderId:"99708731765",
+messagingSenderId:
+"99708731765",
 
-appId:"1:99708731765:web:3fc4914a6264ffe2ee533c"
+appId:
+"1:99708731765:web:3fc4914a6264ffe2ee533c"
 
 }
 
 
-
-//////////////////////////////////////////////////////
-// INIT
-//////////////////////////////////////////////////////
 
 const app=
 initializeApp(firebaseConfig)
@@ -52,9 +51,9 @@ getFirestore(app)
 
 
 
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////
 // MAPEL
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////
 
 const mapelList=[
 
@@ -71,9 +70,9 @@ const mapelList=[
 
 
 
-//////////////////////////////////////////////////////
-// LOGIN STATUS REALTIME
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////
+// LOGIN STATUS
+////////////////////////////////////////////////////////
 
 const tbody=
 document.getElementById(
@@ -98,14 +97,14 @@ tbody.innerHTML=""
 
 let online=0
 
-snapshot.forEach((docu)=>{
+snapshot.forEach((d)=>{
 
-const data=
-docu.data()
+const data=d.data()
 
 if(
 
-data.status==="ONLINE"||
+data.status==="ONLINE"
+||
 data.status==="UJIAN"
 
 ){
@@ -114,11 +113,11 @@ online++
 
 }
 
-tbody.innerHTML += `
+tbody.innerHTML+=`
 
 <tr>
 
-<td>${docu.id}</td>
+<td>${d.id}</td>
 
 <td>${data.nama||"-"}</td>
 
@@ -132,25 +131,7 @@ ${data.status||"-"}
 
 <td>${data.mapel||"-"}</td>
 
-<td>
-
-${
-
-data.waktu
-
-?
-
-new Date(
-data.waktu.seconds*1000
-).toLocaleTimeString()
-
-:
-
-"-"
-
-}
-
-</td>
+<td>${data.waktu||"-"}</td>
 
 </tr>
 
@@ -167,11 +148,11 @@ online
 
 
 
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////
 // CONTROL PANEL
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////
 
-const controlDiv=
+const controlPanel=
 document.getElementById(
 "controlPanel"
 )
@@ -180,19 +161,11 @@ document.getElementById(
 
 function loadControlPanel(){
 
-controlDiv.innerHTML=""
+controlPanel.innerHTML=""
 
 mapelList.forEach(
 
 (mapel)=>{
-
-const id=
-
-"btn_"+
-mapel.replaceAll(
-" ",
-"_"
-)
 
 onSnapshot(
 
@@ -211,6 +184,13 @@ const status=
 data.status||
 "CLOSED"
 
+const id=
+"btn_"+
+mapel.replaceAll(
+" ",
+"_"
+)
+
 
 
 if(
@@ -219,7 +199,7 @@ if(
 
 ){
 
-controlDiv.innerHTML += `
+controlPanel.innerHTML+=`
 
 <div class="controlCard">
 
@@ -233,20 +213,7 @@ ${mapel}
 
 id="${id}"
 
-class="statusBtn
-${
-
-status==="OPEN"
-
-?
-
-"green"
-
-:
-
-"red"
-
-}"
+class="statusBtn"
 
 >
 
@@ -263,7 +230,6 @@ ${status}
 
 
 const btn=
-
 document.getElementById(id)
 
 if(btn){
@@ -271,10 +237,7 @@ if(btn){
 btn.innerText=
 status
 
-btn.className=
-
-`statusBtn
-${
+btn.style.background=
 
 status==="OPEN"
 
@@ -286,7 +249,7 @@ status==="OPEN"
 
 "red"
 
-}`
+
 
 btn.onclick=()=>{
 
@@ -311,9 +274,9 @@ status
 
 
 
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////
 // TOGGLE
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////
 
 window.toggleExam=
 async function(
@@ -334,8 +297,6 @@ status==="OPEN"
 :
 
 "OPEN"
-
-try{
 
 await setDoc(
 
@@ -361,21 +322,11 @@ merge:true
 
 }
 
-catch(err){
-
-console.error(err)
-
-alert(err.message)
-
-}
-
-}
 
 
-
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////
 // OPEN ALL
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////
 
 window.openAllExam=
 async function(){
@@ -420,9 +371,9 @@ alert(
 
 
 
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////
 // CLOSE ALL
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////
 
 window.closeAllExam=
 async function(){
@@ -467,8 +418,8 @@ alert(
 
 
 
-//////////////////////////////////////////////////////
-// LOAD
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////
+// START
+////////////////////////////////////////////////////////
 
 loadControlPanel()
