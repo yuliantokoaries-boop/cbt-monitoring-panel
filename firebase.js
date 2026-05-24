@@ -1,20 +1,16 @@
 // FIREBASE IMPORT
 
-import { initializeApp } from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"
 
 import {
-
 getFirestore,
 collection,
 onSnapshot,
 doc,
 setDoc
-
 }
-
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
 
 
 
@@ -25,23 +21,13 @@ from
 const firebaseConfig={
 
 apiKey:"AIzaSyB7D9fM_Twg04WNnPIOhLZLq56as255wzc",
-
 authDomain:"asat-2026.firebaseapp.com",
-
 projectId:"asat-2026",
-
-storageBucket:
-"asat-2026.firebasestorage.app",
-
-messagingSenderId:
-"99708731765",
-
-appId:
-"1:99708731765:web:3fc4914a6264ffe2ee533c"
+storageBucket:"asat-2026.firebasestorage.app",
+messagingSenderId:"99708731765",
+appId:"1:99708731765:web:3fc4914a6264ffe2ee533c"
 
 }
-
-
 
 const app=
 initializeApp(firebaseConfig)
@@ -74,12 +60,12 @@ const mapelList=[
 // LOGIN STATUS
 ////////////////////////////////////////////////////////
 
-const tbody =
+const tbody=
 document.getElementById(
 "tableBody"
 )
 
-const onlineCount =
+const onlineCount=
 document.getElementById(
 "onlineCount"
 )
@@ -109,7 +95,7 @@ data.status==="UJIAN"
 online++
 }
 
-let waktuFormatted="-"
+let waktu="-"
 
 if(data.waktu){
 
@@ -117,7 +103,7 @@ try{
 
 if(data.waktu.seconds){
 
-waktuFormatted=
+waktu=
 
 new Date(
 data.waktu.seconds*1000
@@ -132,9 +118,10 @@ second:'2-digit'
 
 }
 
-}catch(err){
+}
+catch(e){
 
-console.log(err)
+console.log(e)
 
 }
 
@@ -158,7 +145,7 @@ ${data.status||"-"}
 
 <td>${data.mapel||"-"}</td>
 
-<td>${waktuFormatted}</td>
+<td>${waktu}</td>
 
 </tr>
 
@@ -173,6 +160,8 @@ online
 
 )
 
+
+
 ////////////////////////////////////////////////////////
 // CONTROL PANEL
 ////////////////////////////////////////////////////////
@@ -181,8 +170,6 @@ const controlPanel=
 document.getElementById(
 "controlPanel"
 )
-
-
 
 function loadControlPanel(){
 
@@ -216,15 +203,13 @@ mapel.replaceAll(
 "_"
 )
 
-
-
 if(
 
 !document.getElementById(id)
 
 ){
 
-controlPanel.innerHTML+=`
+controlPanel.innerHTML += `
 
 <div class="controlCard">
 
@@ -235,12 +220,8 @@ ${mapel}
 </h3>
 
 <button
-
 id="${id}"
-
-class="statusBtn"
-
->
+class="statusBtn">
 
 ${status}
 
@@ -251,8 +232,6 @@ ${status}
 `
 
 }
-
-
 
 const btn=
 document.getElementById(id)
@@ -268,13 +247,11 @@ status==="OPEN"
 
 ?
 
-"green"
+"#16a34a"
 
 :
 
-"red"
-
-
+"#dc2626"
 
 btn.onclick=()=>{
 
@@ -305,10 +282,8 @@ status
 
 window.toggleExam=
 async function(
-
 mapel,
 status
-
 ){
 
 const newStatus=
@@ -332,15 +307,11 @@ mapel
 ),
 
 {
-
 status:newStatus
-
 },
 
 {
-
 merge:true
-
 }
 
 )
@@ -357,11 +328,9 @@ window.openAllExam=
 async function(){
 
 for(
-
 const mapel
 of
 mapelList
-
 ){
 
 await setDoc(
@@ -373,15 +342,11 @@ mapel
 ),
 
 {
-
 status:"OPEN"
-
 },
 
 {
-
 merge:true
-
 }
 
 )
@@ -404,11 +369,9 @@ window.closeAllExam=
 async function(){
 
 for(
-
 const mapel
 of
 mapelList
-
 ){
 
 await setDoc(
@@ -420,15 +383,11 @@ mapel
 ),
 
 {
-
 status:"CLOSED"
-
 },
 
 {
-
 merge:true
-
 }
 
 )
