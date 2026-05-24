@@ -22,40 +22,38 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
 // FIREBASE CONFIG
 //////////////////////////////////////////////////////
 
-const firebaseConfig = {
+const firebaseConfig={
 
-apiKey: "AIzaSyB7D9fM_Twg04mNnPIOhLZLq56as255wzc",
+apiKey:"AIzaSyB7D9fM_Twg04mNnPIOhLZLq56as255wzc",
 
-authDomain: "asat-2026.firebaseapp.com",
+authDomain:"asat-2026.firebaseapp.com",
 
-projectId: "asat-2026",
+projectId:"asat-2026",
 
-storageBucket: "asat-2026.firebasestorage.app",
+storageBucket:"asat-2026.firebasestorage.app",
 
-messagingSenderId: "99708731765",
+messagingSenderId:"99708731765",
 
-appId: "1:99708731765:web:3fc4914a6264ffe2ee533c"
+appId:"1:99708731765:web:3fc4914a6264ffe2ee533c"
 
 }
 
 
 
 //////////////////////////////////////////////////////
-// INIT FIREBASE
+// INIT
 //////////////////////////////////////////////////////
 
-const app =
-initializeApp(
-firebaseConfig
-)
+const app=
+initializeApp(firebaseConfig)
 
-const db =
+const db=
 getFirestore(app)
 
 
 
 //////////////////////////////////////////////////////
-// MAPEL LIST
+// MAPEL
 //////////////////////////////////////////////////////
 
 const mapelList=[
@@ -74,15 +72,15 @@ const mapelList=[
 
 
 //////////////////////////////////////////////////////
-// REALTIME LOGIN STATUS
+// LOGIN STATUS REALTIME
 //////////////////////////////////////////////////////
 
-const tbody =
+const tbody=
 document.getElementById(
 "tableBody"
 )
 
-const onlineCount =
+const onlineCount=
 document.getElementById(
 "onlineCount"
 )
@@ -106,13 +104,17 @@ const data=
 docu.data()
 
 if(
+
 data.status==="ONLINE"||
 data.status==="UJIAN"
+
 ){
+
 online++
+
 }
 
-tbody.innerHTML +=`
+tbody.innerHTML += `
 
 <tr>
 
@@ -132,13 +134,21 @@ ${data.status||"-"}
 
 <td>
 
-${data.waktu
+${
+
+data.waktu
+
 ?
+
 new Date(
 data.waktu.seconds*1000
 ).toLocaleTimeString()
+
 :
-"-"}
+
+"-"
+
+}
 
 </td>
 
@@ -176,6 +186,14 @@ mapelList.forEach(
 
 (mapel)=>{
 
+const id=
+
+"btn_"+
+mapel.replaceAll(
+" ",
+"_"
+)
+
 onSnapshot(
 
 doc(
@@ -193,20 +211,22 @@ const status=
 data.status||
 "CLOSED"
 
-const id=
-"btn_"+mapel
-.replaceAll(" ","_")
+
 
 if(
+
 !document.getElementById(id)
+
 ){
 
-controlDiv.innerHTML +=`
+controlDiv.innerHTML += `
 
 <div class="controlCard">
 
 <h3>
+
 ${mapel}
+
 </h3>
 
 <button
@@ -214,16 +234,19 @@ ${mapel}
 id="${id}"
 
 class="statusBtn
-${status==="OPEN"
-?
-'green'
-:
-'red'}"
+${
 
-onclick="toggleExam(
-'${mapel}',
-'${status}'
-)"
+status==="OPEN"
+
+?
+
+"green"
+
+:
+
+"red"
+
+}"
 
 >
 
@@ -234,25 +257,36 @@ ${status}
 </div>
 
 `
-`
 
 }
 
-else{
+
 
 const btn=
+
 document.getElementById(id)
+
+if(btn){
 
 btn.innerText=
 status
 
-btn.style.background=
+btn.className=
+
+`statusBtn
+${
 
 status==="OPEN"
+
 ?
+
 "green"
+
 :
+
 "red"
+
+}`
 
 btn.onclick=()=>{
 
@@ -278,10 +312,11 @@ status
 
 
 //////////////////////////////////////////////////////
-// TOGGLE EXAM
+// TOGGLE
 //////////////////////////////////////////////////////
 
-window.toggleExam = async function(
+window.toggleExam=
+async function(
 
 mapel,
 status
@@ -339,16 +374,18 @@ alert(err.message)
 
 
 //////////////////////////////////////////////////////
-// BUKA SEMUA
+// OPEN ALL
 //////////////////////////////////////////////////////
 
-window.openAllExam =
+window.openAllExam=
 async function(){
 
 for(
+
 const mapel
 of
 mapelList
+
 ){
 
 await setDoc(
@@ -384,16 +421,18 @@ alert(
 
 
 //////////////////////////////////////////////////////
-// TUTUP SEMUA
+// CLOSE ALL
 //////////////////////////////////////////////////////
 
-window.closeAllExam =
+window.closeAllExam=
 async function(){
 
 for(
+
 const mapel
 of
 mapelList
+
 ){
 
 await setDoc(
@@ -429,7 +468,7 @@ alert(
 
 
 //////////////////////////////////////////////////////
-// LOAD PANEL
+// LOAD
 //////////////////////////////////////////////////////
 
 loadControlPanel()
