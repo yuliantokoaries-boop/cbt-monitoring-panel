@@ -74,12 +74,12 @@ const mapelList=[
 // LOGIN STATUS
 ////////////////////////////////////////////////////////
 
-const tbody=
+const tbody =
 document.getElementById(
 "tableBody"
 )
 
-const onlineCount=
+const onlineCount =
 document.getElementById(
 "onlineCount"
 )
@@ -102,18 +102,45 @@ snapshot.forEach((d)=>{
 const data=d.data()
 
 if(
-
 data.status==="ONLINE"
 ||
 data.status==="UJIAN"
-
 ){
-
 online++
+}
+
+let waktuFormatted="-"
+
+if(data.waktu){
+
+try{
+
+if(data.waktu.seconds){
+
+waktuFormatted=
+
+new Date(
+data.waktu.seconds*1000
+).toLocaleTimeString(
+'id-ID',
+{
+hour:'2-digit',
+minute:'2-digit',
+second:'2-digit'
+}
+)
 
 }
 
-tbody.innerHTML+=`
+}catch(err){
+
+console.log(err)
+
+}
+
+}
+
+tbody.innerHTML += `
 
 <tr>
 
@@ -131,26 +158,7 @@ ${data.status||"-"}
 
 <td>${data.mapel||"-"}</td>
 
-const waktuFormatted =
-
-data.waktu
-
-?
-
-new Date(
-data.waktu.seconds * 1000
-).toLocaleString(
-'id-ID',
-{
-hour:'2-digit',
-minute:'2-digit',
-second:'2-digit'
-}
-)
-
-:
-
-"-"
+<td>${waktuFormatted}</td>
 
 </tr>
 
@@ -164,8 +172,6 @@ online
 }
 
 )
-
-
 
 ////////////////////////////////////////////////////////
 // CONTROL PANEL
