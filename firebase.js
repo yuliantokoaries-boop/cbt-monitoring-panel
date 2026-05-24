@@ -131,7 +131,26 @@ ${data.status||"-"}
 
 <td>${data.mapel||"-"}</td>
 
-<td>${data.waktu||"-"}</td>
+const waktuFormatted =
+
+data.waktu
+
+?
+
+new Date(
+data.waktu.seconds * 1000
+).toLocaleString(
+'id-ID',
+{
+hour:'2-digit',
+minute:'2-digit',
+second:'2-digit'
+}
+)
+
+:
+
+"-"
 
 </tr>
 
