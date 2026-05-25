@@ -8,6 +8,8 @@
 
 <title>CBT Monitoring</title>
 
+<link rel="icon" href="data:,">
+
 <style>
 
 *{
@@ -54,6 +56,7 @@ padding:12px;
 border:1px solid #d1d5db;
 border-radius:10px;
 margin-right:10px;
+margin-bottom:10px;
 }
 
 button{
@@ -112,6 +115,12 @@ width:100%;
 margin-top:14px;
 }
 
+#uploadStatus{
+margin-top:15px;
+font-weight:bold;
+color:#16a34a;
+}
+
 </style>
 
 </head>
@@ -121,14 +130,20 @@ margin-top:14px;
 <div class="container">
 
 <h1>
+
 🚀 CBT Monitoring Realtime
+
 </h1>
+
+
+<!-- ONLINE -->
 
 <div class="card">
 
 <div class="statBox">
 
 ONLINE :
+
 <span id="onlineCount">
 
 0
@@ -140,10 +155,14 @@ ONLINE :
 </div>
 
 
+<!-- PANEL CONTROL -->
+
 <div class="card">
 
 <h2>
+
 🚀 PANEL CONTROL UJIAN
+
 </h2>
 
 <button
@@ -173,11 +192,51 @@ class="controlGrid">
 </div>
 
 
+<!-- UPLOAD PESERTA -->
+
+<div class="card">
+
+<h2>
+
+📥 UPLOAD PESERTA CSV
+
+</h2>
+
+<p style="margin-bottom:15px;">
+
+Format:
+
+username,nama,kelas,agama
+
+</p>
+
+<input
+type="file"
+id="csvFile"
+accept=".csv">
+
+<button
+class="green"
+onclick="uploadPeserta()">
+
+UPLOAD CSV
+
+</button>
+
+<div id="uploadStatus">
+
+</div>
+
+</div>
+
+
+<!-- FILTER -->
+
 <div class="card">
 
 <input
 id="searchInput"
-placeholder="Cari Username/Nama">
+placeholder="Cari Username / Nama">
 
 <select id="kelasFilter">
 
@@ -199,6 +258,8 @@ Export CSV
 
 </div>
 
+
+<!-- TABLE -->
 
 <div class="card">
 
@@ -232,7 +293,9 @@ Export CSV
 <script
 type="module"
 src="firebase.js">
+
 </script>
 
 </body>
+
 </html>
