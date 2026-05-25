@@ -55,6 +55,7 @@ getFirestore(app)
 const mapelList=[
 
 "Bahasa Indonesia",
+"Pancasila",
 "Bahasa Inggris",
 "Bahasa Jawa",
 "IPAS",
