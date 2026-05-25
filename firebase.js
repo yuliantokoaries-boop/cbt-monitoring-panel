@@ -4,14 +4,19 @@ import { initializeApp }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"
 
 import {
+
 getFirestore,
 collection,
 onSnapshot,
 doc,
 setDoc,
-getDoc
+getDoc,
+writeBatch
+
 }
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
+
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
 
 
 
@@ -22,10 +27,15 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
 const firebaseConfig={
 
 apiKey:"AIzaSyB7D9fM_Twg04WNnPIOhLZLq56as255wzc",
+
 authDomain:"asat-2026.firebaseapp.com",
+
 projectId:"asat-2026",
+
 storageBucket:"asat-2026.firebasestorage.app",
+
 messagingSenderId:"99708731765",
+
 appId:"1:99708731765:web:3fc4914a6264ffe2ee533c"
 
 }
@@ -62,14 +72,21 @@ const mapelList=[
 ////////////////////////////////////////////////////////
 
 const tbody=
-document.getElementById("tableBody")
+document.getElementById(
+"tableBody"
+)
 
 const onlineCount=
-document.getElementById("onlineCount")
+document.getElementById(
+"onlineCount"
+)
 
 onSnapshot(
 
-collection(db,"login_status"),
+collection(
+db,
+"login_status"
+),
 
 (snapshot)=>{
 
@@ -82,11 +99,15 @@ snapshot.forEach((d)=>{
 const data=d.data()
 
 if(
+
 data.status==="ONLINE"
 ||
 data.status==="UJIAN"
+
 ){
+
 online++
+
 }
 
 let waktu="-"
@@ -382,6 +403,131 @@ merge:true
 alert(
 "SEMUA UJIAN DITUTUP"
 )
+
+}
+
+
+
+////////////////////////////////////////////////////////
+// UPLOAD PESERTA CSV
+////////////////////////////////////////////////////////
+
+window.uploadPeserta=
+async function(){
+
+try{
+
+const file=
+
+document
+.getElementById(
+"csvFile"
+)
+.files[0]
+
+if(!file){
+
+alert(
+"Pilih file CSV."
+)
+
+return
+
+}
+
+const text=
+await file.text()
+
+const rows=
+text
+.trim()
+.split("\n")
+
+const batch=
+writeBatch(db)
+
+let total=0
+
+for(
+let i=1;
+i<rows.length;
+i++
+){
+
+const cols=
+rows[i]
+.split(",")
+
+if(
+cols.length<4
+)
+continue
+
+const username=
+cols[0].trim()
+
+const nama=
+cols[1].trim()
+
+const kelas=
+cols[2].trim()
+
+const agama=
+cols[3].trim()
+
+batch.set(
+
+doc(
+db,
+"users",
+username
+),
+
+{
+
+nama:nama,
+
+kelas:kelas,
+
+agama:agama
+
+}
+
+)
+
+total++
+
+}
+
+await batch.commit()
+
+document
+.getElementById(
+"uploadStatus"
+)
+.innerText=
+
+"✅ Upload berhasil : "
++
+total
++
+" peserta"
+
+alert(
+"UPLOAD BERHASIL"
+
+)
+
+}
+catch(err){
+
+console.error(err)
+
+alert(
+"UPLOAD GAGAL"
+)
+
+}
 
 }
 
