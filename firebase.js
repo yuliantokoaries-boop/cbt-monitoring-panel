@@ -68,18 +68,14 @@ const mapelList=[
 
 
 ////////////////////////////////////////////////////////
-// LOGIN STATUS
+// LOGIN STATUS REALTIME
 ////////////////////////////////////////////////////////
 
 const tbody=
-document.getElementById(
-"tableBody"
-)
+document.getElementById("tableBody")
 
 const onlineCount=
-document.getElementById(
-"onlineCount"
-)
+document.getElementById("onlineCount")
 
 onSnapshot(
 
@@ -118,7 +114,9 @@ waktu=
 
 new Date(
 data.waktu.seconds*1000
-).toLocaleTimeString(
+)
+
+.toLocaleTimeString(
 'id-ID'
 )
 
@@ -160,7 +158,7 @@ online
 
 
 ////////////////////////////////////////////////////////
-// CONTROL PANEL
+// PANEL CONTROL
 ////////////////////////////////////////////////////////
 
 const controlPanel=
@@ -441,7 +439,7 @@ await file.text()
 const rows=
 text
 .trim()
-.split("\n")
+.split(/\r?\n/)
 
 const batch=
 writeBatch(db)
@@ -459,21 +457,27 @@ rows[i]
 .split(",")
 
 if(
-cols.length<4
+cols.length<6
 )
 continue
 
 const username=
 cols[0].trim()
 
-const nama=
+const password=
 cols[1].trim()
 
-const kelas=
+const nama=
 cols[2].trim()
 
-const agama=
+const kelas=
 cols[3].trim()
+
+const agama=
+cols[4].trim()
+
+const sekolah=
+cols[5].trim()
 
 batch.set(
 
@@ -485,11 +489,21 @@ username
 
 {
 
+username:username,
+
+password:password,
+
 nama:nama,
 
 kelas:kelas,
 
-agama:agama
+agama:agama,
+
+sekolah:sekolah,
+
+login:false,
+
+status_ujian:"BELUM_MULAI"
 
 }
 
@@ -525,6 +539,7 @@ console.error(err)
 
 alert(
 "UPLOAD GAGAL"
+
 )
 
 }
