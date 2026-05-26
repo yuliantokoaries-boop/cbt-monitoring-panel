@@ -5,6 +5,9 @@ import {
 
 getFirestore,
 collection,
+query,
+orderBy,
+limit,
 onSnapshot,
 doc,
 setDoc,
@@ -18,7 +21,7 @@ from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 /////////////////////////////////////////////////
-// FIREBASE CONFIG
+// CONFIG
 /////////////////////////////////////////////////
 
 const firebaseConfig={
@@ -44,7 +47,7 @@ const db=
 getFirestore(app);
 
 /////////////////////////////////////////////////
-// MAPEL LIST
+// MAPEL
 /////////////////////////////////////////////////
 
 const mapelList=[
@@ -62,22 +65,44 @@ const mapelList=[
 ];
 
 /////////////////////////////////////////////////
-// REALTIME MONITORING
+// FAST MONITORING
 /////////////////////////////////////////////////
 
 const tbody=
-document.getElementById("tableBody");
+document.getElementById(
+"tableBody"
+);
 
 const onlineCount=
-document.getElementById("onlineCount");
+document.getElementById(
+"onlineCount"
+);
+
+const loginQuery=
+
+query(
+
+collection(
+db,
+"login_status"
+),
+
+orderBy(
+"waktu",
+"desc"
+),
+
+limit(200)
+
+);
 
 onSnapshot(
 
-collection(db,"login_status"),
+loginQuery,
 
 (snapshot)=>{
 
-tbody.innerHTML="";
+let html="";
 
 let online=0;
 
@@ -86,7 +111,8 @@ snapshot.forEach((d)=>{
 const data=d.data();
 
 if(
-data.status==="ONLINE"||
+data.status==="ONLINE"
+||
 data.status==="UJIAN"
 ){
 online++;
@@ -108,7 +134,7 @@ data.waktu.seconds*1000
 
 }
 
-tbody.innerHTML+=`
+html += `
 
 <tr>
 
@@ -130,6 +156,9 @@ tbody.innerHTML+=`
 
 });
 
+tbody.innerHTML=
+html;
+
 onlineCount.innerText=
 online;
 
@@ -138,71 +167,46 @@ online;
 );
 
 /////////////////////////////////////////////////
-// PANEL CONTROL FINAL FIX
+// FAST PANEL CONTROL
 /////////////////////////////////////////////////
 
-const controlPanel =
+const controlPanel=
 document.getElementById(
 "controlPanel"
 );
 
-async function loadControlPanel(){
+onSnapshot(
 
-controlPanel.innerHTML="";
-
-for(
-const mapel
-of
-mapelList
-){
-
-const card=
-document.createElement("div");
-
-card.className=
-"controlCard";
-
-const ref=
-doc(
+collection(
 db,
-"exam_control",
-mapel
-);
+"exam_control"
+),
 
-const snap=
-await getDoc(ref);
+(snapshot)=>{
 
-let status=
+let html="";
+
+const firebaseMapel={};
+
+snapshot.forEach((d)=>{
+
+firebaseMapel[d.id]=
+d.data().status||
 "CLOSED";
 
-if(
-snap.exists()
-){
+});
 
-status=
-snap.data().status
+mapelList.forEach((mapel)=>{
+
+const status=
+
+firebaseMapel[mapel]
 ||
 "CLOSED";
 
-}else{
+html += `
 
-await setDoc(
-
-ref,
-
-{
-status:"CLOSED"
-},
-
-{
-merge:true
-}
-
-);
-
-}
-
-card.innerHTML=`
+<div class="controlCard">
 
 <h3>${mapel}</h3>
 
@@ -233,15 +237,18 @@ ${status}
 
 </button>
 
+</div>
+
 `;
 
-controlPanel.appendChild(
-card
+});
+
+controlPanel.innerHTML=
+html;
+
+}
+
 );
-
-}
-
-}
 
 /////////////////////////////////////////////////
 // TOGGLE
@@ -300,12 +307,10 @@ merge:true
 
 );
 
-loadControlPanel();
-
 }
 catch(err){
 
-console.log(err);
+console.error(err);
 
 alert(
 "Gagal update status"
@@ -316,10 +321,43 @@ alert(
 };
 
 /////////////////////////////////////////////////
-
-loadControlPanel();
+// CREATE MAPEL AUTO
 /////////////////////////////////////////////////
-// CSV UPLOAD FINAL
+
+async function initMapel(){
+
+for(
+const mapel
+of
+mapelList
+){
+
+await setDoc(
+
+doc(
+db,
+"exam_control",
+mapel
+),
+
+{
+status:"CLOSED"
+},
+
+{
+merge:true
+}
+
+);
+
+}
+
+}
+
+initMapel();
+
+/////////////////////////////////////////////////
+// FAST CSV UPLOAD
 /////////////////////////////////////////////////
 
 window.uploadPeserta=
@@ -357,10 +395,6 @@ text
 const batch=
 writeBatch(db);
 
-/////////////////////////////////////////////////
-// DELETE OLD USERS
-/////////////////////////////////////////////////
-
 const oldUsers=
 
 await getDocs(
@@ -385,10 +419,6 @@ d.id
 );
 
 });
-
-/////////////////////////////////////////////////
-// INSERT NEW USERS
-/////////////////////////////////////////////////
 
 let total=0;
 
@@ -420,22 +450,22 @@ cols.length<6
 continue;
 
 const username=
-String(cols[0]).trim();
+cols[0].trim();
 
 const password=
-String(cols[1]).trim();
+cols[1].trim();
 
 const nama=
-String(cols[2]).trim();
+cols[2].trim();
 
 const kelas=
-String(cols[3]).trim();
+cols[3].trim();
 
 const agama=
-String(cols[4]).trim();
+cols[4].trim();
 
 const sekolah=
-String(cols[5]).trim();
+cols[5].trim();
 
 batch.set(
 
@@ -448,19 +478,12 @@ username
 {
 
 username,
-
 password,
-
 nama,
-
 kelas,
-
 agama,
-
 sekolah,
-
 login:false,
-
 status_ujian:
 "BELUM_MULAI"
 
@@ -494,7 +517,9 @@ catch(err){
 console.error(err);
 
 alert(
-"UPLOAD GAGAL"
+"UPLOAD GAGAL : "
++
+err.message
 );
 
 }
