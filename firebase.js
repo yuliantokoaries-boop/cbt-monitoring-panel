@@ -29,7 +29,7 @@ authDomain:"asat-2026.firebaseapp.com",
 
 projectId:"asat-2026",
 
-storageBucket:"asat-2026.appspot.com",
+storageBucket:"asat-2026.firebasestorage.app",
 
 messagingSenderId:"99708731765",
 
@@ -50,6 +50,7 @@ getFirestore(app);
 const mapelList=[
 
 "Bahasa Indonesia",
+"Pancasila",
 "Bahasa Inggris",
 "Bahasa Jawa",
 "IPAS",
@@ -137,112 +138,108 @@ online;
 );
 
 /////////////////////////////////////////////////
-// PANEL CONTROL FIX
+// PANEL CONTROL FINAL FIX
 /////////////////////////////////////////////////
 
 const controlPanel =
 document.getElementById(
 "controlPanel"
-)
+);
 
-const mapelList=[
+async function loadControlPanel(){
 
-"Bahasa Indonesia",
-"Bahasa Inggris",
-"Bahasa Jawa",
-"IPAS",
-"Matematika",
-"PJOK",
-"Seni Rupa",
-"Agama"
+controlPanel.innerHTML="";
 
-]
-
-function loadControlPanel(){
-
-controlPanel.innerHTML=""
-
-mapelList.forEach(
-
-(mapel)=>{
+for(
+const mapel
+of
+mapelList
+){
 
 const card=
-document.createElement("div")
+document.createElement("div");
 
 card.className=
-"controlCard"
+"controlCard";
+
+const ref=
+doc(
+db,
+"exam_control",
+mapel
+);
+
+const snap=
+await getDoc(ref);
+
+let status=
+"CLOSED";
+
+if(
+snap.exists()
+){
+
+status=
+snap.data().status
+||
+"CLOSED";
+
+}else{
+
+await setDoc(
+
+ref,
+
+{
+status:"CLOSED"
+},
+
+{
+merge:true
+}
+
+);
+
+}
 
 card.innerHTML=`
 
 <h3>${mapel}</h3>
 
 <button
-id="btn_${mapel.replace(/\s/g,'_')}"
-class="statusBtn"
+
+onclick="toggleExam('${mapel}')"
+
+style="
+background:${
+status==="OPEN"
+?
+'#16a34a'
+:
+'#dc2626'
+};
+color:white;
+padding:12px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-weight:bold;
+width:100%;
+"
 
 >
 
-LOADING
+${status}
 
 </button>
 
-`
+`;
 
-controlPanel.appendChild(card)
-
-const btn=
-
-document.getElementById(
-
-`btn_${mapel.replace(/\s/g,'_')}`
-
-)
-
-onSnapshot(
-
-doc(
-db,
-"exam_control",
-mapel
-),
-
-(snapshot)=>{
-
-const data=
-snapshot.data()||{}
-
-const status=
-data.status||
-"CLOSED"
-
-btn.innerText=
-status
-
-btn.style.background=
-
-status==="OPEN"
-
-?
-
-"#16a34a"
-
-:
-
-"#dc2626"
-
-btn.onclick=()=>{
-
-toggleExam(mapel)
+controlPanel.appendChild(
+card
+);
 
 }
-
-}
-
-)
-
-}
-
-)
 
 }
 
@@ -256,21 +253,26 @@ async function(mapel){
 try{
 
 const ref=
-
 doc(
 db,
 "exam_control",
 mapel
-)
+);
 
 const snap=
-await getDoc(ref)
+await getDoc(ref);
 
 const current=
 
-snap.data()?.status
-||
-"CLOSED"
+snap.exists()
+
+?
+
+snap.data().status
+
+:
+
+"CLOSED";
 
 const next=
 
@@ -282,7 +284,7 @@ current==="OPEN"
 
 :
 
-"OPEN"
+"OPEN";
 
 await setDoc(
 
@@ -296,23 +298,26 @@ status:next
 merge:true
 }
 
-)
+);
+
+loadControlPanel();
 
 }
 catch(err){
 
-console.log(err)
+console.log(err);
 
 alert(
-"Gagal update mapel"
-)
+"Gagal update status"
+);
 
 }
 
-}
+};
 
-loadControlPanel()
+/////////////////////////////////////////////////
 
+loadControlPanel();
 /////////////////////////////////////////////////
 // CSV UPLOAD FINAL
 /////////////////////////////////////////////////
