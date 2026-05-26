@@ -1,7 +1,5 @@
-// FIREBASE IMPORT
-
 import { initializeApp }
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
 
@@ -11,51 +9,47 @@ onSnapshot,
 doc,
 setDoc,
 getDoc,
-writeBatch
+writeBatch,
+getDocs
 
 }
 
 from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-
-
-////////////////////////////////////////////////////////
-// CONFIG
-////////////////////////////////////////////////////////
+/////////////////////////////////////////////////
+// FIREBASE CONFIG
+/////////////////////////////////////////////////
 
 const firebaseConfig={
 
-apiKey:"AIzaSyB7D9fM_Twg04WNnPIOhLZLq56as255wzc",
+apiKey:"AIzaSyB7D9fM_Twg04mNnPIOhLZLq56as255wzc",
 
 authDomain:"asat-2026.firebaseapp.com",
 
 projectId:"asat-2026",
 
-storageBucket:"asat-2026.firebasestorage.app",
+storageBucket:"asat-2026.appspot.com",
 
 messagingSenderId:"99708731765",
 
 appId:"1:99708731765:web:3fc4914a6264ffe2ee533c"
 
-}
+};
 
 const app=
-initializeApp(firebaseConfig)
+initializeApp(firebaseConfig);
 
 const db=
-getFirestore(app)
+getFirestore(app);
 
-
-
-////////////////////////////////////////////////////////
-// MAPEL
-////////////////////////////////////////////////////////
+/////////////////////////////////////////////////
+// MAPEL LIST
+/////////////////////////////////////////////////
 
 const mapelList=[
 
 "Bahasa Indonesia",
-"Pancasila",
 "Bahasa Inggris",
 "Bahasa Jawa",
 "IPAS",
@@ -64,50 +58,40 @@ const mapelList=[
 "Seni Rupa",
 "Agama"
 
-]
+];
 
-
-
-////////////////////////////////////////////////////////
-// LOGIN STATUS REALTIME
-////////////////////////////////////////////////////////
+/////////////////////////////////////////////////
+// REALTIME MONITORING
+/////////////////////////////////////////////////
 
 const tbody=
-document.getElementById("tableBody")
+document.getElementById("tableBody");
 
 const onlineCount=
-document.getElementById("onlineCount")
+document.getElementById("onlineCount");
 
 onSnapshot(
 
-collection(
-db,
-"login_status"
-),
+collection(db,"login_status"),
 
 (snapshot)=>{
 
-tbody.innerHTML=""
+tbody.innerHTML="";
 
-let online=0
+let online=0;
 
 snapshot.forEach((d)=>{
 
-const data=d.data()
+const data=d.data();
 
 if(
-
-data.status==="ONLINE"
-||
+data.status==="ONLINE"||
 data.status==="UJIAN"
-
 ){
-
-online++
-
+online++;
 }
 
-let waktu="-"
+let waktu="-";
 
 if(data.waktu?.seconds){
 
@@ -119,11 +103,11 @@ data.waktu.seconds*1000
 
 .toLocaleTimeString(
 'id-ID'
-)
+);
 
 }
 
-tbody.innerHTML += `
+tbody.innerHTML+=`
 
 <tr>
 
@@ -133,11 +117,7 @@ tbody.innerHTML += `
 
 <td>${data.kelas||"-"}</td>
 
-<td style="color:red;font-weight:bold">
-
-${data.status||"-"}
-
-</td>
+<td>${data.status||"-"}</td>
 
 <td>${data.mapel||"-"}</td>
 
@@ -145,31 +125,29 @@ ${data.status||"-"}
 
 </tr>
 
-`
+`;
 
-})
+});
 
 onlineCount.innerText=
-online
+online;
 
 }
 
-)
+);
 
-
-
-////////////////////////////////////////////////////////
+/////////////////////////////////////////////////
 // PANEL CONTROL
-////////////////////////////////////////////////////////
+/////////////////////////////////////////////////
 
 const controlPanel=
 document.getElementById(
 "controlPanel"
-)
+);
 
 function loadControlPanel(){
 
-controlPanel.innerHTML=""
+controlPanel.innerHTML="";
 
 mapelList.forEach(
 
@@ -192,26 +170,25 @@ const status=
 data.status||
 "CLOSED"
 
-const id=
-"btn_"+
-mapel.replaceAll(
-" ",
-"_"
-)
-
-if(
-!document.getElementById(id)
-){
-
-controlPanel.innerHTML += `
+controlPanel.innerHTML+=`
 
 <div class="controlCard">
 
 <h3>${mapel}</h3>
 
 <button
-id="${id}"
-class="statusBtn">
+
+onclick="toggleExam('${mapel}')"
+
+style="background:${
+status==="OPEN"
+?
+'green'
+:
+'red'
+}"
+
+>
 
 ${status}
 
@@ -219,72 +196,34 @@ ${status}
 
 </div>
 
-`
+`;
+
+});
+
+});
 
 }
-
-const btn=
-document.getElementById(id)
-
-if(btn){
-
-btn.innerText=
-status
-
-btn.style.background=
-
-status==="OPEN"
-
-?
-
-"#16a34a"
-
-:
-
-"#dc2626"
-
-btn.onclick=()=>{
-
-toggleExam(mapel)
-
-}
-
-}
-
-})
-
-})
-
-}
-
-
-
-////////////////////////////////////////////////////////
-// TOGGLE
-////////////////////////////////////////////////////////
 
 window.toggleExam=
 async function(mapel){
-
-try{
 
 const ref=
 doc(
 db,
 "exam_control",
 mapel
-)
+);
 
 const snap=
-await getDoc(ref)
+await getDoc(ref);
 
 const current=
 
 snap.data()?.status
 ||
-"CLOSED"
+"CLOSED";
 
-const newStatus=
+const next=
 
 current==="OPEN"
 
@@ -294,122 +233,29 @@ current==="OPEN"
 
 :
 
-"OPEN"
+"OPEN";
 
 await setDoc(
 
 ref,
 
 {
-status:newStatus
+status:next
 },
 
 {
 merge:true
 }
 
-)
+);
 
-}
-catch(err){
+};
 
-console.log(err)
+loadControlPanel();
 
-alert(
-"GAGAL UPDATE STATUS"
-)
-
-}
-
-}
-
-
-
-////////////////////////////////////////////////////////
-// OPEN ALL
-////////////////////////////////////////////////////////
-
-window.openAllExam=
-async function(){
-
-for(
-const mapel
-of
-mapelList
-){
-
-await setDoc(
-
-doc(
-db,
-"exam_control",
-mapel
-),
-
-{
-status:"OPEN"
-},
-
-{
-merge:true
-}
-
-)
-
-}
-
-alert(
-"SEMUA UJIAN DIBUKA"
-)
-
-}
-
-
-
-////////////////////////////////////////////////////////
-// CLOSE ALL
-////////////////////////////////////////////////////////
-
-window.closeAllExam=
-async function(){
-
-for(
-const mapel
-of
-mapelList
-){
-
-await setDoc(
-
-doc(
-db,
-"exam_control",
-mapel
-),
-
-{
-status:"CLOSED"
-},
-
-{
-merge:true
-}
-
-)
-
-}
-
-alert(
-"SEMUA UJIAN DITUTUP"
-)
-
-}
-
-
-
-////////////////////////////////////////////////////////
-// UPLOAD PESERTA CSV
-////////////////////////////////////////////////////////
+/////////////////////////////////////////////////
+// CSV UPLOAD FINAL
+/////////////////////////////////////////////////
 
 window.uploadPeserta=
 async function(){
@@ -422,63 +268,109 @@ document
 .getElementById(
 "csvFile"
 )
-.files[0]
+.files[0];
 
 if(!file){
 
 alert(
-"Pilih file CSV."
-)
+"Pilih file CSV"
+);
 
-return
+return;
 
 }
 
 const text=
-await file.text()
+await file.text();
 
 const rows=
+
 text
 .trim()
-.split(/\r?\n/)
+.split(/\r?\n/);
 
 const batch=
-writeBatch(db)
+writeBatch(db);
 
-let total=0
+/////////////////////////////////////////////////
+// DELETE OLD USERS
+/////////////////////////////////////////////////
+
+const oldUsers=
+
+await getDocs(
+
+collection(
+db,
+"users"
+)
+
+);
+
+oldUsers.forEach((d)=>{
+
+batch.delete(
+
+doc(
+db,
+"users",
+d.id
+)
+
+);
+
+});
+
+/////////////////////////////////////////////////
+// INSERT NEW USERS
+/////////////////////////////////////////////////
+
+let total=0;
 
 for(
+
 let i=1;
+
 i<rows.length;
+
 i++
+
 ){
 
 const cols=
-rows[i]
-.split(",")
+
+rows[i].includes(";")
+
+?
+
+rows[i].split(";")
+
+:
+
+rows[i].split(",");
 
 if(
 cols.length<6
 )
-continue
+continue;
 
 const username=
-cols[0].trim()
+String(cols[0]).trim();
 
 const password=
-cols[1].trim()
+String(cols[1]).trim();
 
 const nama=
-cols[2].trim()
+String(cols[2]).trim();
 
 const kelas=
-cols[3].trim()
+String(cols[3]).trim();
 
 const agama=
-cols[4].trim()
+String(cols[4]).trim();
 
 const sekolah=
-cols[5].trim()
+String(cols[5]).trim();
 
 batch.set(
 
@@ -490,67 +382,56 @@ username
 
 {
 
-username:username,
+username,
 
-password:password,
+password,
 
-nama:nama,
+nama,
 
-kelas:kelas,
+kelas,
 
-agama:agama,
+agama,
 
-sekolah:sekolah,
+sekolah,
 
 login:false,
 
-status_ujian:"BELUM_MULAI"
+status_ujian:
+"BELUM_MULAI"
 
 }
 
-)
+);
 
-total++
+total++;
 
 }
 
-await batch.commit()
-
-document
-.getElementById(
-"uploadStatus"
-)
-.innerText=
-
-"✅ Upload berhasil : "
-+
-total
-+
-" peserta"
+await batch.commit();
 
 alert(
-"UPLOAD BERHASIL"
 
-)
+"UPLOAD BERHASIL : "
+
++
+
+total
+
++
+
+" peserta"
+
+);
 
 }
 catch(err){
 
-console.error(err)
+console.error(err);
 
 alert(
 "UPLOAD GAGAL"
-
-)
-
-}
+);
 
 }
 
-
-
-////////////////////////////////////////////////////////
-// START
-////////////////////////////////////////////////////////
-
-loadControlPanel()
+};
