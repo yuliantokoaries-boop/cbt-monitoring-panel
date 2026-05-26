@@ -137,21 +137,66 @@ online;
 );
 
 /////////////////////////////////////////////////
-// PANEL CONTROL
+// PANEL CONTROL FIX
 /////////////////////////////////////////////////
 
-const controlPanel=
+const controlPanel =
 document.getElementById(
 "controlPanel"
-);
+)
+
+const mapelList=[
+
+"Bahasa Indonesia",
+"Bahasa Inggris",
+"Bahasa Jawa",
+"IPAS",
+"Matematika",
+"PJOK",
+"Seni Rupa",
+"Agama"
+
+]
 
 function loadControlPanel(){
 
-controlPanel.innerHTML="";
+controlPanel.innerHTML=""
 
 mapelList.forEach(
 
 (mapel)=>{
+
+const card=
+document.createElement("div")
+
+card.className=
+"controlCard"
+
+card.innerHTML=`
+
+<h3>${mapel}</h3>
+
+<button
+id="btn_${mapel.replace(/\s/g,'_')}"
+class="statusBtn"
+
+>
+
+LOADING
+
+</button>
+
+`
+
+controlPanel.appendChild(card)
+
+const btn=
+
+document.getElementById(
+
+`btn_${mapel.replace(/\s/g,'_')}`
+
+)
 
 onSnapshot(
 
@@ -170,58 +215,62 @@ const status=
 data.status||
 "CLOSED"
 
-controlPanel.innerHTML+=`
+btn.innerText=
+status
 
-<div class="controlCard">
+btn.style.background=
 
-<h3>${mapel}</h3>
-
-<button
-
-onclick="toggleExam('${mapel}')"
-
-style="background:${
 status==="OPEN"
+
 ?
-'green'
+
+"#16a34a"
+
 :
-'red'
-}"
 
->
+"#dc2626"
 
-${status}
+btn.onclick=()=>{
 
-</button>
-
-</div>
-
-`;
-
-});
-
-});
+toggleExam(mapel)
 
 }
+
+}
+
+)
+
+}
+
+)
+
+}
+
+/////////////////////////////////////////////////
+// TOGGLE
+/////////////////////////////////////////////////
 
 window.toggleExam=
 async function(mapel){
 
+try{
+
 const ref=
+
 doc(
 db,
 "exam_control",
 mapel
-);
+)
 
 const snap=
-await getDoc(ref);
+await getDoc(ref)
 
 const current=
 
 snap.data()?.status
 ||
-"CLOSED";
+"CLOSED"
 
 const next=
 
@@ -233,7 +282,7 @@ current==="OPEN"
 
 :
 
-"OPEN";
+"OPEN"
 
 await setDoc(
 
@@ -247,11 +296,22 @@ status:next
 merge:true
 }
 
-);
+)
 
-};
+}
+catch(err){
 
-loadControlPanel();
+console.log(err)
+
+alert(
+"Gagal update mapel"
+)
+
+}
+
+}
+
+loadControlPanel()
 
 /////////////////////////////////////////////////
 // CSV UPLOAD FINAL
