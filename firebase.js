@@ -24,27 +24,90 @@ from
 // CONFIG
 /////////////////////////////////////////////////
 
-const firebaseConfig={
+const kelas4Config={
 
-apiKey:"AIzaSyB7D9fM_Twg04mNnPIOhLZLq56as255wzc",
+apiKey:"AIzaSyAQiDpPmYwKl6lLzGSBqxDibZcoDXKSPe0",
 
-authDomain:"asat-2026.firebaseapp.com",
+authDomain:"asat-kelas4.firebaseapp.com",
 
-projectId:"asat-2026",
+projectId:"asat-kelas4",
 
-storageBucket:"asat-2026.firebasestorage.app",
+storageBucket:"asat-kelas4.firebasestorage.app",
 
-messagingSenderId:"99708731765",
+messagingSenderId:"534921636931",
 
-appId:"1:99708731765:web:3fc4914a6264ffe2ee533c"
+appId:"1:534921636931:web:3b1bb46c8ffa6ed6d278f6"
 
 };
 
-const app=
-initializeApp(firebaseConfig);
+const kelas5Config={
 
-const db=
-getFirestore(app);
+apiKey:"AIzaSyAWRhXgqPNkt1vocmQnl6Ihv6tOuOeytmo",
+
+authDomain:"asat-kelas5.firebaseapp.com",
+
+projectId:"asat-kelas5",
+
+storageBucket:"asat-kelas5.firebasestorage.app",
+
+messagingSenderId:"859842323809",
+
+appId:"1:859842323809:web:03f2e3e125516310fb1120"
+
+};
+
+const controlConfig={
+
+apiKey:"AIzaSyAB9Gi7LPB3k0l4y869FM_6TMR9bYkwTpo",
+
+authDomain:"asat-control.firebaseapp.com",
+
+projectId:"asat-control",
+
+storageBucket:"asat-control.firebasestorage.app",
+
+messagingSenderId:"154888610054",
+
+appId:"1:154888610054:web:c9f6e6c7486644fe033e87"
+
+};
+
+/////////////////////////////////////////////////
+// APP
+/////////////////////////////////////////////////
+
+const kelas4App=
+initializeApp(
+kelas4Config,
+"KELAS4"
+);
+
+const kelas5App=
+initializeApp(
+kelas5Config,
+"KELAS5"
+);
+
+const controlApp=
+initializeApp(
+controlConfig,
+"CONTROL"
+);
+
+const kelas4DB=
+getFirestore(
+kelas4App
+);
+
+const kelas5DB=
+getFirestore(
+kelas5App
+);
+
+const controlDB=
+getFirestore(
+controlApp
+);
 
 /////////////////////////////////////////////////
 // MAPEL
@@ -65,7 +128,7 @@ const mapelList=[
 ];
 
 /////////////////////////////////////////////////
-// FAST MONITORING
+// ELEMENT
 /////////////////////////////////////////////////
 
 const tbody=
@@ -78,12 +141,58 @@ document.getElementById(
 "onlineCount"
 );
 
-const loginQuery=
+const controlPanel=
+document.getElementById(
+"controlPanel"
+);
+
+const searchInput=
+document.getElementById(
+"searchInput"
+);
+
+const kelasFilter=
+document.getElementById(
+"kelasFilter"
+);
+
+let allData=[];
+
+let kelas4Cache={};
+
+let kelas5Cache={};
+/////////////////////////////////////////////////
+// MERGE CACHE
+/////////////////////////////////////////////////
+
+function mergeData(){
+
+allData=[
+
+...Object.values(
+kelas4Cache
+),
+
+...Object.values(
+kelas5Cache
+)
+
+];
+
+renderTable();
+
+}
+
+/////////////////////////////////////////////////
+// MONITORING KELAS4
+/////////////////////////////////////////////////
+
+const kelas4Query=
 
 query(
 
 collection(
-db,
+kelas4DB,
 "login_status"
 ),
 
@@ -92,28 +201,158 @@ orderBy(
 "desc"
 ),
 
-limit(200)
+limit(100)
 
 );
 
 onSnapshot(
 
-loginQuery,
+kelas4Query,
 
 (snapshot)=>{
+
+kelas4Cache={};
+
+snapshot.forEach((d)=>{
+
+kelas4Cache[d.id]={
+
+id:d.id,
+
+server:"KELAS4",
+
+...d.data()
+
+};
+
+});
+
+mergeData();
+
+}
+
+);
+
+/////////////////////////////////////////////////
+// MONITORING KELAS5
+/////////////////////////////////////////////////
+
+const kelas5Query=
+
+query(
+
+collection(
+kelas5DB,
+"login_status"
+),
+
+orderBy(
+"waktu",
+"desc"
+),
+
+limit(100)
+
+);
+
+onSnapshot(
+
+kelas5Query,
+
+(snapshot)=>{
+
+kelas5Cache={};
+
+snapshot.forEach((d)=>{
+
+kelas5Cache[d.id]={
+
+id:d.id,
+
+server:"KELAS5",
+
+...d.data()
+
+};
+
+});
+
+mergeData();
+
+}
+
+);
+
+/////////////////////////////////////////////////
+// RENDER TABLE
+/////////////////////////////////////////////////
+
+function renderTable(){
 
 let html="";
 
 let online=0;
 
-snapshot.forEach((d)=>{
+const keyword=
 
-const data=d.data();
+searchInput.value
+.toLowerCase();
+
+const filter=
+kelasFilter.value;
+
+allData.forEach((data)=>{
+
+const username=
+data.id||"";
+
+const nama=
+data.nama||"";
+
+const kelas=
+String(
+data.kelas||""
+);
 
 if(
+
+keyword
+&&
+
+!username
+.toLowerCase()
+.includes(keyword)
+
+&&
+
+!nama
+.toLowerCase()
+.includes(keyword)
+
+){
+
+return;
+
+}
+
+if(
+filter
+&&
+kelas!==filter
+){
+
+return;
+
+}
+
+if(
+
 data.status==="ONLINE"
+
 ||
+
 data.status==="UJIAN"
+
 ){
 online++;
 }
@@ -125,7 +364,9 @@ if(data.waktu?.seconds){
 waktu=
 
 new Date(
+
 data.waktu.seconds*1000
+
 )
 
 .toLocaleTimeString(
@@ -138,17 +379,35 @@ html += `
 
 <tr>
 
-<td>${d.id}</td>
+<td>${username}</td>
 
-<td>${data.nama||"-"}</td>
+<td>${nama}</td>
 
-<td>${data.kelas||"-"}</td>
+<td>${kelas}</td>
 
-<td>${data.status||"-"}</td>
+<td>
 
-<td>${data.mapel||"-"}</td>
+${data.server}
 
-<td>${waktu}</td>
+</td>
+
+<td>
+
+${data.status||"-"}
+
+</td>
+
+<td>
+
+${data.mapel||"-"}
+
+</td>
+
+<td>
+
+${waktu}
+
+</td>
 
 </tr>
 
@@ -164,21 +423,29 @@ online;
 
 }
 
-);
-
 /////////////////////////////////////////////////
-// FAST PANEL CONTROL
+// SEARCH FILTER
 /////////////////////////////////////////////////
 
-const controlPanel=
-document.getElementById(
-"controlPanel"
+searchInput
+.addEventListener(
+"input",
+renderTable
 );
+
+kelasFilter
+.addEventListener(
+"change",
+renderTable
+);
+/////////////////////////////////////////////////
+// PANEL CONTROL REALTIME
+/////////////////////////////////////////////////
 
 onSnapshot(
 
 collection(
-db,
+controlDB,
 "exam_control"
 ),
 
@@ -186,12 +453,14 @@ db,
 
 let html="";
 
-const firebaseMapel={};
+const mapelStatus={};
 
 snapshot.forEach((d)=>{
 
-firebaseMapel[d.id]=
-d.data().status||
+mapelStatus[d.id]=
+
+d.data().status
+||
 "CLOSED";
 
 });
@@ -200,7 +469,7 @@ mapelList.forEach((mapel)=>{
 
 const status=
 
-firebaseMapel[mapel]
+mapelStatus[mapel]
 ||
 "CLOSED";
 
@@ -208,13 +477,20 @@ html += `
 
 <div class="controlCard">
 
-<h3>${mapel}</h3>
+<h3>
+
+${mapel}
+
+</h3>
 
 <button
+
+class="statusBtn"
 
 onclick="toggleExam('${mapel}')"
 
 style="
+
 background:${
 status==="OPEN"
 ?
@@ -222,13 +498,7 @@ status==="OPEN"
 :
 '#dc2626'
 };
-color:white;
-padding:12px;
-border:none;
-border-radius:8px;
-cursor:pointer;
-font-weight:bold;
-width:100%;
+
 "
 
 >
@@ -251,7 +521,7 @@ html;
 );
 
 /////////////////////////////////////////////////
-// TOGGLE
+// TOGGLE MAPEL
 /////////////////////////////////////////////////
 
 window.toggleExam=
@@ -260,10 +530,15 @@ async function(mapel){
 try{
 
 const ref=
+
 doc(
-db,
+
+controlDB,
+
 "exam_control",
+
 mapel
+
 );
 
 const snap=
@@ -287,7 +562,7 @@ current==="OPEN"
 
 ?
 
-"CLOSED"
+" CLOSED"
 
 :
 
@@ -298,11 +573,16 @@ await setDoc(
 ref,
 
 {
-status:next
+
+status:
+next.trim()
+
 },
 
 {
+
 merge:true
+
 }
 
 );
@@ -313,7 +593,7 @@ catch(err){
 console.error(err);
 
 alert(
-"Gagal update status"
+"Gagal update mapel"
 );
 
 }
@@ -321,10 +601,13 @@ alert(
 };
 
 /////////////////////////////////////////////////
-// CREATE MAPEL AUTO
+// OPEN ALL
 /////////////////////////////////////////////////
 
-async function initMapel(){
+window.openAllExam=
+async function(){
+
+try{
 
 for(
 const mapel
@@ -335,17 +618,131 @@ mapelList
 await setDoc(
 
 doc(
-db,
+
+controlDB,
+
 "exam_control",
+
 mapel
+
 ),
 
 {
-status:"CLOSED"
+
+status:"OPEN"
+
 },
 
 {
+
 merge:true
+
+}
+
+);
+
+}
+
+}
+catch(err){
+
+console.error(err);
+
+}
+
+};
+
+/////////////////////////////////////////////////
+// CLOSE ALL
+/////////////////////////////////////////////////
+
+window.closeAllExam=
+async function(){
+
+try{
+
+for(
+const mapel
+of
+mapelList
+){
+
+await setDoc(
+
+doc(
+
+controlDB,
+
+"exam_control",
+
+mapel
+
+),
+
+{
+
+status:"CLOSED"
+
+},
+
+{
+
+merge:true
+
+}
+
+);
+
+}
+
+}
+catch(err){
+
+console.error(err);
+
+}
+
+};
+
+/////////////////////////////////////////////////
+// INIT MAPEL SAFE
+/////////////////////////////////////////////////
+
+async function initMapel(){
+
+for(
+const mapel
+of
+mapelList
+){
+
+const ref=
+
+doc(
+
+controlDB,
+
+"exam_control",
+
+mapel
+
+);
+
+const snap=
+await getDoc(ref);
+
+if(
+!snap.exists()
+){
+
+await setDoc(
+
+ref,
+
+{
+
+status:"CLOSED"
+
 }
 
 );
@@ -354,16 +751,25 @@ merge:true
 
 }
 
-initMapel();
+}
 
+initMapel();
 /////////////////////////////////////////////////
-// FAST CSV UPLOAD
+// UPLOAD CSV PER KELAS
 /////////////////////////////////////////////////
 
 window.uploadPeserta=
 async function(){
 
 try{
+
+const kelasUpload=
+
+document
+.getElementById(
+"uploadKelas"
+)
+.value;
 
 const file=
 
@@ -383,6 +789,18 @@ return;
 
 }
 
+const db=
+
+kelasUpload==="4"
+
+?
+
+kelas4DB
+
+:
+
+kelas5DB;
+
 const text=
 await file.text();
 
@@ -394,6 +812,10 @@ text
 
 const batch=
 writeBatch(db);
+
+/////////////////////////////////////////////////
+// DELETE OLD USERS
+/////////////////////////////////////////////////
 
 const oldUsers=
 
@@ -419,6 +841,10 @@ d.id
 );
 
 });
+
+/////////////////////////////////////////////////
+// INSERT USERS
+/////////////////////////////////////////////////
 
 let total=0;
 
@@ -483,7 +909,9 @@ nama,
 kelas,
 agama,
 sekolah,
+
 login:false,
+
 status_ujian:
 "BELUM_MULAI"
 
@@ -497,19 +925,14 @@ total++;
 
 await batch.commit();
 
-alert(
+document
+.getElementById(
+"uploadStatus"
+)
+.innerHTML=
 
-"UPLOAD BERHASIL : "
-
-+
-
-total
-
-+
-
-" peserta"
-
-);
+`✅ Upload ${total} peserta
+ke SERVER KELAS ${kelasUpload}`;
 
 }
 catch(err){
@@ -517,11 +940,122 @@ catch(err){
 console.error(err);
 
 alert(
+
 "UPLOAD GAGAL : "
 +
 err.message
+
 );
 
 }
 
 };
+
+/////////////////////////////////////////////////
+// EXPORT CSV
+/////////////////////////////////////////////////
+
+window.exportCSV=
+function(){
+
+let csv=
+
+"Username,Nama,Kelas,Server,Status,Mapel,Waktu\n";
+
+allData.forEach((d)=>{
+
+let waktu="-";
+
+if(
+d.waktu?.seconds
+){
+
+waktu=
+
+new Date(
+
+d.waktu.seconds*1000
+
+)
+
+.toLocaleTimeString(
+'id-ID'
+);
+
+}
+
+csv +=
+
+`${d.id||""},`
+
++
+
+`${d.nama||""},`
+
++
+
+`${d.kelas||""},`
+
++
+
+`${d.server||""},`
+
++
+
+`${d.status||""},`
+
++
+
+`${d.mapel||""},`
+
++
+
+`${waktu}\n`;
+
+});
+
+const blob=
+
+new Blob(
+
+[csv],
+
+{
+
+type:
+'text/csv'
+
+}
+
+);
+
+const a=
+
+document
+.createElement(
+'a'
+);
+
+a.href=
+
+URL.createObjectURL(
+blob
+);
+
+a.download=
+
+"cbt_monitoring.csv";
+
+a.click();
+
+};
+
+/////////////////////////////////////////////////
+// FINAL READY
+/////////////////////////////////////////////////
+
+console.log(
+
+"✅ MULTI SERVER READY"
+
+);
