@@ -196,12 +196,7 @@ kelas4DB,
 "login_status"
 ),
 
-orderBy(
-"waktu",
-"desc"
-),
-
-limit(100)
+limit(300)
 
 );
 
@@ -246,12 +241,7 @@ kelas5DB,
 "login_status"
 ),
 
-orderBy(
-"waktu",
-"desc"
-),
-
-limit(100)
+limit(300)
 
 );
 
@@ -294,6 +284,24 @@ let html="";
 let online=0;
 
 const keyword=
+  if(
+
+allData.length>500
+
+&&
+
+!keyword
+
+){
+
+allData=
+
+allData.slice(
+0,
+500
+);
+
+}
 
 searchInput.value
 .toLowerCase();
@@ -301,7 +309,9 @@ searchInput.value
 const filter=
 kelasFilter.value;
 
-allData.forEach((data)=>{
+allData
+.slice(0,300)
+.forEach((data)=>{
 
 const username=
 data.id||"";
@@ -810,8 +820,10 @@ text
 .trim()
 .split(/\r?\n/);
 
-const batch=
+let batch=
 writeBatch(db);
+
+let counter=0;
 
 /////////////////////////////////////////////////
 // DELETE OLD USERS
@@ -894,6 +906,26 @@ const sekolah=
 cols[5].trim();
 
 batch.set(
+  counter++;
+
+if(
+counter>=400
+){
+
+if(
+counter>0
+){
+
+await batch.commit();
+
+}
+
+batch=
+writeBatch(db);
+
+counter=0;
+
+}
 
 doc(
 db,
@@ -1059,3 +1091,40 @@ console.log(
 "✅ MULTI SERVER READY"
 
 );
+setInterval(()=>{
+
+const now=
+Date.now();
+
+allData=
+
+allData.filter((d)=>{
+
+const ts=
+
+d.waktu?.seconds
+||
+d.Waktu?.seconds;
+
+if(!ts)
+return true;
+
+return(
+
+now-
+
+ts*1000
+
+)
+
+<
+
+7200000;
+
+});
+
+renderTable();
+
+},
+
+60000);
