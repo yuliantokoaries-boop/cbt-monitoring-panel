@@ -4,9 +4,16 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>CBT Monitoring</title>
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1">
+
+<title>
+
+CBT Monitoring Multi Server
+
+</title>
 
 <link rel="icon" href="data:,">
 
@@ -19,53 +26,74 @@ box-sizing:border-box;
 }
 
 body{
+
 font-family:Segoe UI,sans-serif;
 background:#eef2f7;
 padding:25px;
+
 }
 
 .container{
-max-width:1500px;
+
+max-width:1600px;
 margin:auto;
+
 }
 
 h1,h2{
+
 color:#1e293b;
 margin-bottom:18px;
+
 }
 
 .card{
+
 background:white;
 padding:24px;
 border-radius:18px;
 margin-bottom:22px;
 box-shadow:0 10px 30px rgba(0,0,0,.08);
+
 }
 
 .statBox{
-background:linear-gradient(135deg,#2563eb,#1d4ed8);
+
+background:
+linear-gradient(
+135deg,
+#2563eb,
+#1d4ed8
+);
+
 color:white;
 padding:22px;
 border-radius:18px;
 font-size:28px;
 font-weight:bold;
+
 }
 
-input,select{
+input,
+select{
+
 padding:12px;
 border:1px solid #d1d5db;
 border-radius:10px;
 margin-right:10px;
 margin-bottom:10px;
+
 }
 
 button{
+
 border:none;
 cursor:pointer;
 padding:12px 18px;
 border-radius:10px;
 font-weight:bold;
 color:white;
+
 }
 
 .blue{
@@ -81,44 +109,80 @@ background:#dc2626;
 }
 
 table{
+
 width:100%;
 border-collapse:collapse;
+
 }
 
 th{
+
 background:#2563eb;
 color:white;
 padding:14px;
+
 }
 
 td{
+
 padding:12px;
-border-bottom:1px solid #e5e7eb;
+border-bottom:
+1px solid #e5e7eb;
+
 }
 
 .controlGrid{
+
 display:grid;
+
 grid-template-columns:
-repeat(auto-fill,minmax(220px,1fr));
+repeat(
+auto-fill,
+minmax(220px,1fr)
+);
+
 gap:18px;
+
 }
 
 .controlCard{
+
 background:#f8fafc;
 padding:18px;
 border-radius:16px;
-box-shadow:0 4px 14px rgba(0,0,0,.08);
+box-shadow:
+0 4px 14px
+rgba(0,0,0,.08);
+
 }
 
 .statusBtn{
+
 width:100%;
 margin-top:14px;
+
 }
 
 #uploadStatus{
+
 margin-top:15px;
 font-weight:bold;
 color:#16a34a;
+
+}
+
+.server4{
+
+color:#2563eb;
+font-weight:bold;
+
+}
+
+.server5{
+
+color:#16a34a;
+font-weight:bold;
+
 }
 
 </style>
@@ -131,10 +195,9 @@ color:#16a34a;
 
 <h1>
 
-🚀 CBT Monitoring Realtime
+🚀 CBT Monitoring Multi Server
 
 </h1>
-
 
 <!-- ONLINE -->
 
@@ -153,7 +216,6 @@ ONLINE :
 </div>
 
 </div>
-
 
 <!-- PANEL CONTROL -->
 
@@ -191,8 +253,7 @@ class="controlGrid">
 
 </div>
 
-
-<!-- UPLOAD PESERTA -->
+<!-- UPLOAD CSV -->
 
 <div class="card">
 
@@ -202,13 +263,21 @@ class="controlGrid">
 
 </h2>
 
-<p style="margin-bottom:15px;">
+<select id="uploadKelas">
 
-Format:
+<option value="4">
 
-username,nama,kelas,agama
+Kelas 4
 
-</p>
+</option>
+
+<option value="5">
+
+Kelas 5
+
+</option>
+
+</select>
 
 <input
 type="file"
@@ -229,20 +298,37 @@ UPLOAD CSV
 
 </div>
 
-
 <!-- FILTER -->
 
 <div class="card">
 
 <input
+
 id="searchInput"
-placeholder="Cari Username / Nama">
 
-<select id="kelasFilter">
+placeholder=
+"Cari Username / Nama"
 
-<option>
+>
+
+<select
+id="kelasFilter">
+
+<option value="">
 
 Semua Kelas
+
+</option>
+
+<option value="4">
+
+Kelas 4
+
+</option>
+
+<option value="5">
+
+Kelas 5
 
 </option>
 
@@ -258,7 +344,6 @@ Export CSV
 
 </div>
 
-
 <!-- TABLE -->
 
 <div class="card">
@@ -269,12 +354,47 @@ Export CSV
 
 <tr>
 
-<th>Username</th>
-<th>Nama</th>
-<th>Kelas</th>
-<th>Status</th>
-<th>Mapel</th>
-<th>Waktu</th>
+<th>
+
+Username
+
+</th>
+
+<th>
+
+Nama
+
+</th>
+
+<th>
+
+Kelas
+
+</th>
+
+<th>
+
+SERVER
+
+</th>
+
+<th>
+
+Status
+
+</th>
+
+<th>
+
+Mapel
+
+</th>
+
+<th>
+
+Waktu
+
+</th>
 
 </tr>
 
