@@ -830,13 +830,9 @@ if(
 counter>=400
 ){
 
-if(
-counter>0
-){
+if(counter>=400){
 
 await batch.commit();
-
-}
 
 batch=
 writeBatch(db);
@@ -844,6 +840,8 @@ writeBatch(db);
 counter=0;
 
 }
+
+batch.set(
 
 doc(
 db,
@@ -869,6 +867,8 @@ status_ujian:
 
 );
 
+counter++;
+
 total++;
 
 }
@@ -889,6 +889,7 @@ catch(err){
 
 console.error(err);
 
+}
 alert(
 
 "UPLOAD GAGAL : "
