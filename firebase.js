@@ -274,6 +274,43 @@ mergeData();
 );
 
 /////////////////////////////////////////////////
+// FORMAT WAKTU
+/////////////////////////////////////////////////
+
+function formatWaktu(waktu){
+
+if(!waktu)
+return "-";
+
+try{
+
+if(waktu.seconds){
+
+return new Date(
+
+waktu.seconds*1000
+
+).toLocaleTimeString(
+"id-ID"
+);
+
+}
+
+return new Date(
+waktu
+).toLocaleTimeString(
+"id-ID"
+);
+
+}
+catch(err){
+
+return "-";
+
+}
+
+}
+/////////////////////////////////////////////////
 // RENDER TABLE
 /////////////////////////////////////////////////
 
