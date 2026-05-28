@@ -283,7 +283,6 @@ let html="";
 
 let online=0;
 
-const keyword=
   function renderTable(){
 
 let html="";
