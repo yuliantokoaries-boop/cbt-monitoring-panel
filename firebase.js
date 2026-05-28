@@ -280,13 +280,6 @@ mergeData();
 function renderTable(){
 
 let html="";
-
-let online=0;
-
-function renderTable(){
-
-let html="";
-
 let online=0;
 
 const keyword =
@@ -298,94 +291,61 @@ kelasFilter.value;
 let filteredData=[...allData];
 
 if(
-
 filteredData.length>500
 &&
 !keyword
-
 ){
-
 filteredData=
-
-filteredData.slice(
-0,
-500
-);
-
+filteredData.slice(0,500);
 }
 
 filteredData.forEach((d)=>{
 
 if(
-
 filter!=="all"
 &&
 d.kelas!==filter
-
 ){
-
 return;
-
 }
 
 const text=(
-
-`${d.username||""}
+`${d.id||""}
 ${d.nama||""}
 ${d.kelas||""}`
-
 ).toLowerCase();
 
 if(
-
 keyword
 &&
 !text.includes(keyword)
-
 ){
-
 return;
-
 }
 
 if(
-
 d.status==="ONLINE"
 ||
 d.status==="UJIAN"
-
 ){
-
 online++;
-
 }
 
 html+=`
-
 <tr>
-
 <td>${d.id||"-"}</td>
-
 <td>${d.nama||"-"}</td>
-
 <td>${d.kelas||"-"}</td>
-
 <td>${d.server||"-"}</td>
-
 <td>${d.status||"-"}</td>
-
 <td>${d.mapel||"-"}</td>
-
 <td>${formatWaktu(d.waktu)}</td>
-
 </tr>
-
 `;
 
 });
 
 tbody.innerHTML=html;
-
 onlineCount.innerText=
 "ONLINE : "+online;
 
