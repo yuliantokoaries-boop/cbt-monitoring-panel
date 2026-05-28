@@ -283,74 +283,64 @@ let html="";
 
 let online=0;
 
-  function renderTable(){
+function renderTable(){
 
 let html="";
 
 let online=0;
 
-const keyword=
+const keyword =
+searchInput.value.toLowerCase();
 
-searchInput.value
-.toLowerCase();
-
-const filter=
+const filter =
 kelasFilter.value;
+
+let filteredData=[...allData];
 
 if(
 
-allData.length>500
-
+filteredData.length>500
 &&
-
 !keyword
 
 ){
 
-allData=
+filteredData=
 
-allData.slice(
+filteredData.slice(
 0,
 500
 );
 
 }
 
-searchInput.value
-.toLowerCase();
+filteredData.forEach((d)=>{
 
-const filter=
-kelasFilter.value;
+if(
 
-allData
-.slice(0,300)
-.forEach((data)=>{
+filter!=="all"
+&&
+d.kelas!==filter
 
-const username=
-data.id||"";
+){
 
-const nama=
-data.nama||"";
+return;
 
-const kelas=
-String(
-data.kelas||""
-);
+}
+
+const text=(
+
+`${d.username||""}
+${d.nama||""}
+${d.kelas||""}`
+
+).toLowerCase();
 
 if(
 
 keyword
 &&
-
-!username
-.toLowerCase()
-.includes(keyword)
-
-&&
-
-!nama
-.toLowerCase()
-.includes(keyword)
+!text.includes(keyword)
 
 ){
 
@@ -359,78 +349,34 @@ return;
 }
 
 if(
-filter
-&&
-kelas!==filter
-){
 
-return;
-
-}
-
-if(
-
-data.status==="ONLINE"
-
+d.status==="ONLINE"
 ||
-
-data.status==="UJIAN"
+d.status==="UJIAN"
 
 ){
+
 online++;
-}
-
-let waktu="-";
-
-if(data.waktu?.seconds){
-
-waktu=
-
-new Date(
-
-data.waktu.seconds*1000
-
-)
-
-.toLocaleTimeString(
-'id-ID'
-);
 
 }
 
-html += `
+html+=`
 
 <tr>
 
-<td>${username}</td>
+<td>${d.id||"-"}</td>
 
-<td>${nama}</td>
+<td>${d.nama||"-"}</td>
 
-<td>${kelas}</td>
+<td>${d.kelas||"-"}</td>
 
-<td>
+<td>${d.server||"-"}</td>
 
-${data.server}
+<td>${d.status||"-"}</td>
 
-</td>
+<td>${d.mapel||"-"}</td>
 
-<td>
-
-${data.status||"-"}
-
-</td>
-
-<td>
-
-${data.mapel||"-"}
-
-</td>
-
-<td>
-
-${waktu}
-
-</td>
+<td>${formatWaktu(d.waktu)}</td>
 
 </tr>
 
@@ -438,11 +384,10 @@ ${waktu}
 
 });
 
-tbody.innerHTML=
-html;
+tbody.innerHTML=html;
 
 onlineCount.innerText=
-online;
+"ONLINE : "+online;
 
 }
 
