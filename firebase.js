@@ -824,24 +824,6 @@ const sekolah=
 cols[5].trim();
 
 batch.set(
-  counter++;
-
-if(
-counter>=400
-){
-
-if(counter>=400){
-
-await batch.commit();
-
-batch=
-writeBatch(db);
-
-counter=0;
-
-}
-
-batch.set(
 
 doc(
 db,
@@ -871,9 +853,26 @@ counter++;
 
 total++;
 
-}
+if(
+counter>=400
+){
 
 await batch.commit();
+
+batch=
+writeBatch(db);
+
+counter=0;
+
+}
+
+}
+
+if(counter>0){
+
+await batch.commit();
+
+}
 
 document
 .getElementById(
@@ -889,7 +888,6 @@ catch(err){
 
 console.error(err);
 
-}
 alert(
 
 "UPLOAD GAGAL : "
