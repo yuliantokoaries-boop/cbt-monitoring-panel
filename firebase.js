@@ -284,7 +284,21 @@ let html="";
 let online=0;
 
 const keyword=
-  if(
+  function renderTable(){
+
+let html="";
+
+let online=0;
+
+const keyword=
+
+searchInput.value
+.toLowerCase();
+
+const filter=
+kelasFilter.value;
+
+if(
 
 allData.length>500
 
